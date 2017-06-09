@@ -12,9 +12,11 @@
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 	<link rel="apple-touch-icon" href="/favicon.png">
+	<link rel="stylesheet" href="{{mix('/css/app.css')}}">
 </head>
-<body class="@yield('body-class', 'docs') language-php">
 
+<body class="@yield('body-class', 'docs') language-php">
+	<script src="{{mix('/js/app.js')}}"></script>
 	<span class="overlay"></span>
 
 	<nav class="main">
