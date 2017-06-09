@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+
 class PostController extends Controller
 {
     /**
@@ -11,9 +12,11 @@ class PostController extends Controller
     *
     * @return Response
     */
-    public function index()
+    public function index(Post $postModel)
     {
-        $posts = Post::all();
+        $posts = $postModel->getPublishedPosts();
         return view('posts.index', ['posts' => $posts]);
     }
+
+    
 }

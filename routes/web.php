@@ -16,3 +16,7 @@
 // });
 
 Route::get('/', ['as' => 'posts', 'uses' => 'PostController@index']);
+
+Route::resource('post', 'PostController', ['except' => [
+  'index'
+]]);
