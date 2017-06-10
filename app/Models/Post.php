@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+// use App\Models\Answer;
 
 class Post extends Model
 {
@@ -22,6 +23,11 @@ class Post extends Model
           if ($model->published == true)
             $model->published_at = Carbon::now()->toDateTimeString();
         });
+    }
+
+    public function answers()
+    {
+        return $this->hasMany('App\Models\Answer');
     }
 
     public function getPublishedPosts()
