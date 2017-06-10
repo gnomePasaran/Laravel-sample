@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-// use App\Models\Answer;
+use App\Models\Answer;
 
 class Post extends Model
 {
@@ -27,7 +27,7 @@ class Post extends Model
 
     public function answers()
     {
-        return $this->hasMany('App\Models\Answer');
+        return $this->hasMany('Answer');
     }
 
     public function getPublishedPosts()

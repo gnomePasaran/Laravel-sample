@@ -7,7 +7,7 @@
 
   {{ link_to_route('posts', 'published') }}
 
-  {{ Form::model($post, array('route' => $route, 'method' => ($post->id) ? 'PUT' : 'POST', 'class' => 'form-horizontal')) }}
+  {{ Form::model($post, ['route' => $route, 'method' => ($post->id) ? 'PUT' : 'POST', 'class' => 'form-horizontal']) }}
     @if (count($errors) > 0)
       <div class="alert alert-danger">
           <ul>
