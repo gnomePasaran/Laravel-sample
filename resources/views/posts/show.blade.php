@@ -13,4 +13,14 @@
       <li>{{ $answer->content }}</li>
     @endforeach
   </ul>
+  <div>
+    {{ Form::model('Answer', array('route' => ['post.answer.store', $post->id])) }}
+        <h2>Create answer</h2>
+        <div>
+          {{ Form::textArea('content') }}
+        </div>
+      </div>
+      {{ Form::submit() }}
+    {{ Form::close()}}
+  </div>
 @stop
