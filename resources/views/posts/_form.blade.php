@@ -2,7 +2,7 @@
 
 @section('content')
   @php
-    $route = ($post->id) ? array('post.update', $post->id) : 'post.create'
+    $route = ($post->id) ? array('post.update', $post->id) : 'post.store'
   @endphp
 
   {{ link_to_route('posts', 'published') }}

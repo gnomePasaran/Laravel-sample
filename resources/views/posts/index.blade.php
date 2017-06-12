@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-  {{ link_to_route('posts', 'published') }} &nbsp;&nbsp;&nbsp; {{ link_to_route('post.create', 'New post') }}
+  {{ link_to_route('posts', 'published') }} &nbsp;&nbsp;&nbsp; {{ link_to_route('post.create', 'New post', [], ['class' => 'new-post']) }}
 
   @foreach ($posts as $post)
     <article class="">
