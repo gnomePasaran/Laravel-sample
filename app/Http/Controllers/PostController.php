@@ -15,7 +15,7 @@ class PostController extends Controller
     public function index(Post $postModel)
     {
         $posts = $postModel->getPublishedPosts();
-        return view('posts.index', ['posts' => $posts]);
+        return view('home', ['posts' => $posts]);
     }
 
     public function show($id)
