@@ -27,7 +27,7 @@ class Post extends Model
 
     public function answers()
     {
-        return $this->hasMany('Answer');
+        return $this->hasMany(Answer::class);
     }
 
     public function getPublishedPosts()
