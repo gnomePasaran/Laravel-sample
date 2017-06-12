@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -27,12 +29,20 @@ class PostController extends Controller
 
     public function create()
     {
+        if (!Auth::check()) {
+          abort(403, 'Unauthorized action.');
+        }
+
         $post = new Post;
         return view('posts.create', ['post' => $post]);
     }
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+          abort(403, 'Unauthorized action.');
+        }
+
         $this->validate($request, [
           'title' => 'required|unique:posts|min:5|max:50',
           'content' => 'required'
@@ -46,6 +56,10 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        if (Gate::denies('edit', $post)) {
+          abort(403, 'Unauthorized action.');
+        }
+
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -57,6 +71,10 @@ class PostController extends Controller
         ]);
         $setPost = $request->only('title', 'content', 'published');
         $post = Post::find($id);
+
+        if (Gate::denies('update', $post)) {
+          abort(403, 'Unauthorized action.');
+        }
 
         if ($post->save($setPost)) // returns true/false
           return redirect()->route('posts');
