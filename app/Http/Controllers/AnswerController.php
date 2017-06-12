@@ -10,6 +10,10 @@ class AnswerController extends Controller
 {
     public function store(Request $request, $postId)
     {
+        if (!Auth::check()) {
+          abort(403, 'Unauthorized action.');
+        }
+
         $this->validate($request, [
             'content' => 'required|min:3'
         ]);
