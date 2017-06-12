@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Post;
+use App\Models\Answer;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(PostsSeeder::class);
+        $this->call(AnswersSeeder::class);
     }
 }
 
@@ -37,7 +39,6 @@ class PostsSeeder extends Seeder
         'excerpt' => '<b>Second Post body</b>',
         'content' => '<b>Second First Post body</b>',
         'published' => false,
-        'published_at' => DB::raw('CURRENT_TIMESTAMP'),
       ]);
 
       Post::create([
@@ -48,5 +49,27 @@ class PostsSeeder extends Seeder
         'published' => true,
         'published_at' => DB::raw('CURRENT_TIMESTAMP'),
       ]);
+    }
+
+}
+
+class AnswersSeeder extends Seeder
+{
+    public function run()
+    {
+        Answer::create([
+            'post_id' => Post::find(1)->id,
+            'content' => 'Content 1'
+        ]);
+
+        Answer::create([
+            'post_id' => Post::find(2)->id,
+            'content' => 'Content 2'
+        ]);
+
+        Answer::create([
+            'post_id' => Post::find(3)->id,
+            'content' => 'Content 3'
+        ]);
     }
 }
