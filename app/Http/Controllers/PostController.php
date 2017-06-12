@@ -37,7 +37,7 @@ class PostController extends Controller
           'title' => 'required|unique:posts|min:5|max:50',
           'content' => 'required'
         ]);
-        $setPost = $request->only('title', 'content');
+        $setPost = $request->only('title', 'content', 'published');
 
         Post::create($setPost); // returns array
         return redirect()->route('posts');

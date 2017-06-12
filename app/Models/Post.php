@@ -13,15 +13,15 @@ class Post extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content', 'published'];
 
     protected static function boot()
     {
         static::saving(function($model) {
-          $model->slug = Post::seoUrl($model->title);
-          $model->excerpt = substr($model->content, 0, 150);
-          if ($model->published == true)
-            $model->published_at = Carbon::now()->toDateTimeString();
+            $model->slug = Post::seoUrl($model->title);
+            $model->excerpt = substr($model->content, 0, 150);
+            if ($model->published == true)
+                $model->published_at = Carbon::now()->toDateTimeString();
         });
     }
 
