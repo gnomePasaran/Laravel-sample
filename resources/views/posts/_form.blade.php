@@ -41,7 +41,7 @@
         {{ Form::label('published', 'Published', array('class' => 'awesome')) }}
       </div>
       <div>
-        {{ Form::checkbox('published', 'Published') }}
+        {{ Form::checkbox('published', '1', false) }}
       </div>
     </div>
 

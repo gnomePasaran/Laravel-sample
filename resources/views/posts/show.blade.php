@@ -21,7 +21,7 @@
       @endforeach
     </ul>
     <div>
-      @can(Auth::check())
+      @if(Auth::check())
         <h2>Create answer</h2>
         {{ Form::model('Answer', array('route' => ['post.answer.store', $post->id])) }}
           <div>
@@ -29,7 +29,7 @@
           </div>
           {{ Form::submit() }}
         {{ Form::close()}}
-      @endcan
+      @endif
     </div>
   </div>
 @stop
