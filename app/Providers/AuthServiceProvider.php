@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Answer;
 use App\Models\Post;
 use App\Policies\PostPolicy;
+use App\Policies\AnswerPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

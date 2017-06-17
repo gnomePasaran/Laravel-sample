@@ -10,16 +10,16 @@ class PostPolicy extends AppPolicy
 {
     public function update(User $user, Post $post)
     {
-        return $post->user_id === $user->id;
+        return $post->user_id == $user->id;
     }
 
     public function edit(User $user, Post $post)
     {
-        $this->update($user, $post);
+        return $this->update($user, $post);
     }
 
     public function destroy(User $user, Post $post)
     {
-        $this->update($user, $post);
+        return $this->update($user, $post);
     }
 }

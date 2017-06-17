@@ -10,16 +10,16 @@ class AnswerPolicy extends AppPolicy
 {
     public function update(User $user, Answer $answer)
     {
-        return $answer->user_id === $user->id;
+        return $answer->user_id == $user->id;
     }
 
     public function edit(User $user, Answer $answer)
     {
-        $this->update($user, $answer);
+        return $this->update($user, $answer);
     }
 
     public function destroy(User $user, Answer $answer)
     {
-        $this->update($user, $answer);
+        return $this->update($user, $answer);
     }
 }
