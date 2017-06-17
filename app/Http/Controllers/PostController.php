@@ -9,6 +9,11 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['only' => 'create', 'store', 'update', 'destroy']);
+    }
+
     /**
     * Discription
     *
@@ -29,25 +34,18 @@ class PostController extends Controller
 
     public function create()
     {
-        if (!Auth::check()) {
-          abort(403, 'Unauthorized action.');
-        }
-
         $post = new Post;
         return view('posts.create', ['post' => $post]);
     }
 
     public function store(Request $request)
     {
-        if (!Auth::check()) {
-          abort(403, 'Unauthorized action.');
-        }
-
         $this->validate($request, [
           'title' => 'required|unique:posts|min:5|max:50',
           'content' => 'required'
         ]);
         $setPost = $request->only('title', 'content', 'published');
+        $setPost['user_id'] = Auth::user()->id;
 
         Post::create($setPost); // returns array
         return redirect()->route('posts');
@@ -67,7 +65,7 @@ class PostController extends Controller
     {
         $this->validate($request, [
           'title' => 'required|unique:posts|min:5|max:50',
-          'content' => 'required'
+          'content' => 'required',
         ]);
         $setPost = $request->only('title', 'content', 'published');
         $post = Post::find($id);
@@ -80,5 +78,17 @@ class PostController extends Controller
           return redirect()->route('posts');
         else
           return view('posts.create', ['post' => $post]);
+    }
+
+    public function destroy($id)
+    {
+      $post = Post::findOrFail($id);
+
+      if (Gate::denies('destroy', $post)) {
+        abort(403, 'Unauthorized action.');
+      }
+
+      $post->delete();
+      return redirect()->route('posts');
     }
 }

@@ -13,8 +13,11 @@
       @foreach ($posts as $post)
         <article class="">
           <h2><b>{{ link_to_route('post.show', $post->title, $post->id) }}</b>
-            @can('edit', $posts->first())
+            @can('edit', $post)
                 ({{ link_to_route('post.edit', 'Edit post', $post->id) }})
+                {{ Form::open(['method' => 'DELETE', 'route' => ['post.destroy', $post->id]]) }}
+                  {{ Form::submit('Delete') }}
+                {{ Form::close() }}
             @endcan
           </h2>
           <p><b>{{ $post->excerpt }}</b></p>
