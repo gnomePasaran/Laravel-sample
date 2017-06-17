@@ -17,7 +17,19 @@
     </article>
     <ul>
       @foreach ($post->answers as $answer)
-        <li>{{ $answer->content }}</li>
+        <li>
+          {{ $answer->content }}
+          @can('edit', $answer)
+            {{ Form::model($answer, ['route' => ['post.answer.update', $post->id, $answer->id], 'method' => 'PUT', 'class' => 'form-horizontal']) }}
+              {{ Form::textArea('content')}}
+              {{ Form::submit('Update') }}
+            {{ Form::close() }}
+
+            {{ Form::open(['method' => 'DELETE', 'route' => ['post.answer.destroy', $post->id, $answer->id]]) }}
+              {{ Form::submit('Delete') }}
+            {{ Form::close() }}
+          @endcan
+        </li>
       @endforeach
     </ul>
     <div>

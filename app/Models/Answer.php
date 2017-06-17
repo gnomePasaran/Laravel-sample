@@ -7,7 +7,7 @@ use App\Models\Post;
 
 class Answer extends Model
 {
-    protected $fillable = ['content']; 
+    protected $fillable = ['content', 'user_id']; 
 
     public function post()
     {
