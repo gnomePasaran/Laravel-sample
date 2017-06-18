@@ -6,6 +6,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
+use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
@@ -14,11 +15,6 @@ class PostController extends Controller
         $this->middleware('auth', ['only' => 'create', 'store', 'update', 'destroy']);
     }
 
-    /**
-    * Discription
-    *
-    * @return Response
-    */
     public function index(Post $postModel)
     {
         $posts = $postModel->getPublishedPosts();
@@ -27,7 +23,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         $post->with('answers')->get();
         return view('posts.show', ['post' => $post]);
     }
@@ -38,12 +34,8 @@ class PostController extends Controller
         return view('posts.create', ['post' => $post]);
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $this->validate($request, [
-          'title' => 'required|unique:posts|min:5|max:50',
-          'content' => 'required'
-        ]);
         $setPost = $request->only('title', 'content', 'published');
         $setPost['user_id'] = Auth::user()->id;
 
@@ -53,7 +45,8 @@ class PostController extends Controller
 
     public function edit($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
+
         if (Gate::denies('edit', $post)) {
           abort(403, 'Unauthorized action.');
         }
@@ -61,14 +54,10 @@ class PostController extends Controller
         return view('posts.edit', ['post' => $post]);
     }
 
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-        $this->validate($request, [
-          'title' => 'required|unique:posts|min:5|max:50',
-          'content' => 'required',
-        ]);
         $setPost = $request->only('title', 'content', 'published');
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
 
         if (Gate::denies('update', $post)) {
           abort(403, 'Unauthorized action.');
