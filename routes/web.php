@@ -14,3 +14,8 @@ Route::resource('post.answer', 'AnswerController', [
     'show',
     'create'
 ]]);
+
+Route::get('answer/{id}/toggle_best', [
+  'as' => 'answer.toggle_best',
+  'uses' => 'AnswerController@toggle_best'
+]);
