@@ -19,6 +19,12 @@
       @foreach ($post->answers as $answer)
         <li>
           {{ $answer->content }}
+          @if($answer->is_best)
+            <strong>Best Answer!!!</strong>
+          @endif
+          @if(Auth::check())
+            {{ link_to_route('answer.toggle_best', 'Toggle best', $answer->id) }}
+          @endif
           @can('edit', $answer)
             @include('answers._form', [
               'answer' => $answer,
