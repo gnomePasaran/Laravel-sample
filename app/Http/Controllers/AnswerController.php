@@ -30,15 +30,15 @@ class AnswerController extends Controller
     public function update(AnswerRequest $request, $postId, $id)
     {
         $setAnswer = $request->only('content');
-        $post = Post::findOrFail($postId);
+        $answer = Answer::findOrFail($id);
 
         if (Gate::denies('update', $answer)) {
           abort(403, 'Unauthorized action.');
         }
 
-        $post->answers()->update($setAnswer);
+        $answer->update($setAnswer);
 
-        return redirect()->route('post.show', ['id' => $post->id]);
+        return redirect()->route('post.show', ['id' => $postId]);
     }
 
     public function destroy($postId, $id)
