@@ -20,10 +20,11 @@
         <li>
           {{ $answer->content }}
           @can('edit', $answer)
-            {{ Form::model($answer, ['route' => ['post.answer.update', $post->id, $answer->id], 'method' => 'PUT', 'class' => 'form-horizontal']) }}
-              {{ Form::textArea('content')}}
-              {{ Form::submit('Update') }}
-            {{ Form::close() }}
+            @include('answers._form', [
+              'answer' => $answer,
+              'route' => ['post.answer.update', $post->id, $answer->id],
+              'method' => 'PUT'
+            ])
 
             {{ Form::open(['method' => 'DELETE', 'route' => ['post.answer.destroy', $post->id, $answer->id]]) }}
               {{ Form::submit('Delete') }}
@@ -35,12 +36,11 @@
     <div>
       @if(Auth::check())
         <h2>Create answer</h2>
-        {{ Form::model('Answer', array('route' => ['post.answer.store', $post->id])) }}
-          <div>
-            {{ Form::textArea('content') }}
-          </div>
-          {{ Form::submit() }}
-        {{ Form::close()}}
+        @include('answers._form', [
+          'answer' => Answer::class,
+          'route' => ['post.answer.store', $post->id],
+          'method' => 'POST'
+        ])
       @endif
     </div>
   </div>

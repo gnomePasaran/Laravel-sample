@@ -5,14 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\Answer;
+use App\Models\User;
 
 class Post extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['title', 'content', 'published', 'user_id'];
 
     protected static function boot()
@@ -32,6 +28,11 @@ class Post extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getPublishedPosts()
