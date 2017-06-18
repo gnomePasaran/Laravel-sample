@@ -13,21 +13,25 @@ class Post extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'content', 'published'];
+    protected $fillable = ['title', 'content', 'published', 'user_id'];
 
     protected static function boot()
     {
         static::saving(function($model) {
             $model->slug = Post::seoUrl($model->title);
             $model->excerpt = substr($model->content, 0, 150);
-            if ($model->published == true)
-                $model->published_at = Carbon::now()->toDateTimeString();
+            if ($model->published == true) {
+              $model->published_at = Carbon::now()->toDateTimeString();
+              $model->published = true;
+            } else {
+              $model->published = false;
+            }
         });
     }
 
     public function answers()
     {
-        return $this->hasMany('Answer');
+        return $this->hasMany(Answer::class);
     }
 
     public function getPublishedPosts()
