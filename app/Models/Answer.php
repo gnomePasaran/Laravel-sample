@@ -20,4 +20,13 @@ class Answer extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function toggle_best()
+    {
+        $this->is_best = !$this->is_best;
+        if ($this->is_best) {
+            Answer::where('post_id', '=', $this->post_id)->where('is_best', '=', true)->update(['is_best' => false]);
+        }
+        $this->save();
+    }
+
 }

@@ -13,7 +13,8 @@ class AnswerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['only' => 'store', 'update', 'destroy']);
+        $this->middleware('auth',
+            ['only' => 'store', 'update', 'destroy', 'toggle_best']);
     }
 
     public function store(AnswerRequest $request, $postId)
@@ -52,5 +53,13 @@ class AnswerController extends Controller
         $answer->delete();
 
         return redirect()->route('post.show', ['id' => $postId]);
+    }
+
+    public function toggle_best($id)
+    {
+        $answer = Answer::findOrFail($id);
+        $answer->toggle_best();
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 }
