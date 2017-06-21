@@ -22,4 +22,9 @@ class PostPolicy extends AppPolicy
     {
         return $this->update($user, $post);
     }
+
+    public function notAthor(User $user, Post $post)
+    {
+        return $post->user_id != $user->id;
+    }
 }
