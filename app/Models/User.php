@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Answer;
 use App\Models\Post;
+use App\Models\Vote;
 
 class User extends Authenticatable
 {
@@ -29,13 +30,18 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function post()
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
-    public function answer()
+    public function votes()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Vote::class);
     }
 }
