@@ -34,7 +34,7 @@ class AnswerController extends Controller
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('update', $answer)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $answer->update($setAnswer);
@@ -47,7 +47,7 @@ class AnswerController extends Controller
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('destroy', $answer)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $answer->delete();
@@ -55,10 +55,40 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $postId]);
     }
 
-    public function toggle_best($id)
+    public function toggleBest($id)
     {
         $answer = Answer::findOrFail($id);
+
+        if (Gate::denies('toggleBest', $answer)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $answer->toggle_best();
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteUp($id)
+    {
+        $answer = Answer::findOrFail($id);
+        $answer->voteUp(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteDown($id)
+    {
+        $answer = Answer::findOrFail($id);
+        $answer->voteDown(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteCancel($id)
+    {
+
+        $answer = Answer::findOrFail($id);
+        $answer->voteCancel(Auth::user());
 
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }

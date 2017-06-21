@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Post;
 use App\Http\Requests\PostRequest;
+use App\Models\Post;
+use App\Models\Vote;
 
 class PostController extends Controller
 {
@@ -25,6 +26,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->with('answers')->get();
+
         return view('posts.show', ['post' => $post]);
     }
 
@@ -63,7 +65,7 @@ class PostController extends Controller
           abort(403, 'Unauthorized action.');
         }
 
-        if ($post->save($setPost)) // returns true/false
+        if ($post->update($setPost)) // returns true/false
           return redirect()->route('posts');
         else
           return view('posts.create', ['post' => $post]);
@@ -71,13 +73,38 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-      $post = Post::findOrFail($id);
+        $post = Post::findOrFail($id);
 
-      if (Gate::denies('destroy', $post)) {
-        abort(403, 'Unauthorized action.');
-      }
+        if (Gate::denies('destroy', $post)) {
+          abort(403, 'Unauthorized action.');
+        }
 
-      $post->delete();
-      return redirect()->route('posts');
+        $post->delete();
+        return redirect()->route('posts');
+    }
+
+    public function voteUp($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->voteUp(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $id]);
+    }
+
+    public function voteDown($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->voteDown(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $id]);
+    }
+
+    public function voteCancel($id)
+    {
+
+        $post = Post::findOrFail($id);
+        $post->voteCancel(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $id]);
     }
 }
