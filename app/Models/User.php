@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Answer;
 use App\Models\Post;
+use App\Models\Subscription;
 use App\Models\Vote;
 
 class User extends Authenticatable
@@ -40,8 +41,27 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
     public function votes()
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public function isSubscribed(Post $post)
+    {
+        return !!$this->subscriptions()->where(['post_id' => $post->id])->first();
+    }
+
+    public function subscribe(Post $post)
+    {
+        if ($this->isSubscribed($post)){
+            $this->subscriptions()->where(['post_id' => $post->id])->first()->delete();
+        } else {
+            $this->subscriptions()->create(['post_id' => $post->id]);
+        }
     }
 }

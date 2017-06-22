@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\Answer;
+use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
 
@@ -24,11 +25,20 @@ class Post extends Model
               $model->published = false;
             }
         });
+
+        static::saved(function($model) {
+            $model->subscriptions()->create(['user_id' => $model->user_id]);
+        });
     }
 
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function subscriptions()
+    {      
+        return $this->hasMany(Subscription::class);
     }
 
     public function votes()
