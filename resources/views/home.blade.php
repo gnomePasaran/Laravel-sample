@@ -21,6 +21,7 @@
             @endcan
           </h2>
           <p><b>{{ $post->excerpt }}</b></p>
+          <p>Athor: {{ $post->user->name }} | {{ $post->user->email }}</p>
           <p>Published: {{ $post->published_at }}</p>
         </article>
       @endforeach

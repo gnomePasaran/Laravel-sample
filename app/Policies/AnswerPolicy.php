@@ -22,4 +22,14 @@ class AnswerPolicy extends AppPolicy
     {
         return $this->update($user, $answer);
     }
+
+    public function toggleBest(User $user, Answer $answer)
+    {
+        return $answer->post->user_id == $user->id;
+    }
+
+    public function notAthor(User $user, Answer $answer)
+    {
+        return $answer->user_id != $user->id;
+    }
 }

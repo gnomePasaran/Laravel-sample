@@ -13,7 +13,8 @@ class AnswerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['only' => 'store', 'update', 'destroy']);
+        $this->middleware('auth',
+            ['only' => 'store', 'update', 'destroy', 'toggle_best']);
     }
 
     public function store(AnswerRequest $request, $postId)
@@ -33,7 +34,7 @@ class AnswerController extends Controller
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('update', $answer)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $answer->update($setAnswer);
@@ -46,11 +47,49 @@ class AnswerController extends Controller
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('destroy', $answer)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         $answer->delete();
 
         return redirect()->route('post.show', ['id' => $postId]);
+    }
+
+    public function toggleBest($id)
+    {
+        $answer = Answer::findOrFail($id);
+
+        if (Gate::denies('toggleBest', $answer)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $answer->toggle_best();
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteUp($id)
+    {
+        $answer = Answer::findOrFail($id);
+        $answer->voteUp(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteDown($id)
+    {
+        $answer = Answer::findOrFail($id);
+        $answer->voteDown(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
+    }
+
+    public function voteCancel($id)
+    {
+
+        $answer = Answer::findOrFail($id);
+        $answer->voteCancel(Auth::user());
+
+        return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 }

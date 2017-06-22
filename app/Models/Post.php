@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\Answer;
+use App\Models\Vote;
 use App\Models\User;
 
 class Post extends Model
@@ -30,6 +31,11 @@ class Post extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function votes()
+    {
+        return $this->morphMany(Vote::class, 'votable');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -44,6 +50,31 @@ class Post extends Model
     {
         $query->where('published_at', '<=', Carbon::now())
               ->where('published', '=', true);
+    }
+
+    public function getScore()
+    {
+        return $this->votes->sum('score');
+    }
+
+    public function voteUp(User $user)
+    {
+        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
+        $vote->score = 1;
+        $vote->save();
+    }
+
+    public function voteDown(User $user)
+    {
+        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
+        $vote->score = -1;
+        $vote->save();
+    }
+
+    public function voteCancel(User $user)
+    {
+        if ($vote = $this->votes()->where(['user_id' => $user->id])->first())
+            $vote->delete();
     }
 
     private static function seoUrl($string)

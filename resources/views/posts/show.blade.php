@@ -7,30 +7,24 @@
   <div class="panel-body">
 
     <article class="">
-      <h2><b>{{ $post->title }}</b>
+      <h2>{{ $post->getScore() }}&nbsp;&nbsp;&nbsp;<b>{{ $post->title }}</b>
+
         @can('edit', $post)
           ({{ link_to_route('post.edit', 'Edit post', $post->id) }})
         @endcan
+
+        @can('notAthor', $post)
+          @include('votes._votes', ['entity' => $post, 'route' => 'post'])
+        @endcan
+
       </h2>
+      <p>Athor: {{ $post->user->name }} | {{ $post->user->email }}</p>
       <p>Published: {{ $post->published_at }}</p>
       <p>{{ $post->content }}</p>
     </article>
     <ul>
       @foreach ($post->answers as $answer)
-        <li>
-          {{ $answer->content }}
-          @can('edit', $answer)
-            @include('answers._form', [
-              'answer' => $answer,
-              'route' => ['post.answer.update', $post->id, $answer->id],
-              'method' => 'PUT'
-            ])
-
-            {{ Form::open(['method' => 'DELETE', 'route' => ['post.answer.destroy', $post->id, $answer->id]]) }}
-              {{ Form::submit('Delete') }}
-            {{ Form::close() }}
-          @endcan
-        </li>
+        @include('answers.answer', ['answer' => $answer])
       @endforeach
     </ul>
     <div>
