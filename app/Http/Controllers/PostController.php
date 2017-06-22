@@ -13,7 +13,11 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['only' => 'create', 'store', 'update', 'destroy']);
+        // only Authenticated user  app/Http/Kernel.php
+        $this->middleware('auth', [
+            'only' => 'create', 'store', 'update', 'destroy',
+            'subscribe', 'voteUp', 'voteDown', 'voteCancel'
+        ]);
     }
 
     public function index(Post $postModel)
@@ -81,6 +85,14 @@ class PostController extends Controller
 
         $post->delete();
         return redirect()->route('posts');
+    }
+
+    public function subscribe($id)
+    {
+        $post = Post::findOrFail($id);
+        Auth::user()->subscribe($post);
+
+        return redirect()->route('post.show', ['id' => $id]);
     }
 
     public function voteUp($id)

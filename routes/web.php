@@ -15,6 +15,11 @@ Route::resource('post.answer', 'AnswerController', [
     'create'
 ]]);
 
+Route::get('post/{id}/subscribe', [
+  'as' => 'post.subscribe',
+  'uses' => 'PostController@subscribe'
+]);
+
 Route::get('answer/{id}/toggle_best', [
   'as' => 'answer.toggle_best',
   'uses' => 'AnswerController@toggleBest'
