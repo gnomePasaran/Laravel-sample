@@ -37,7 +37,7 @@ class Post extends Model
     }
 
     public function subscriptions()
-    {      
+    {
         return $this->hasMany(Subscription::class);
     }
 
@@ -85,6 +85,11 @@ class Post extends Model
     {
         if ($vote = $this->votes()->where(['user_id' => $user->id])->first())
             $vote->delete();
+    }
+
+    public function subscribers()
+    {
+        return User::whereIn('id', $this->subscriptions()->pluck('user_id'))->get();
     }
 
     private static function seoUrl($string)
