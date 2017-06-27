@@ -4,12 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Post;
+use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
+use App\Mail\PostNotified;
+use Illuminate\Support\Facades\Mail;
 
 class Answer extends Model
 {
     protected $fillable = ['content', 'user_id'];
+
+    protected static function boot()
+    {
+        static::created(function($model) {
+            foreach ($model->post->subscribers() as $subscriber) {
+                Mail::to($subscriber)->send(new PostNotified($model->post));
+            }
+        });
+    }
 
     public function post()
     {

@@ -1,8 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="panel-heading">Posts
-    {{ link_to_route('posts', 'published') }}
+  <div class="panel-heading">
+    Posts
+    {{ link_to_route('posts', 'published') }}&nbsp;&nbsp;&nbsp;
+    @if(Auth::check())
+      {{ link_to_route(
+            'post.subscribe',
+            Auth::user()->isSubscribed($post) ? 'Unsubscribe' : 'Subscribe',
+            $post->id
+      ) }}
+    @endif
   </div>
   <div class="panel-body">
 
