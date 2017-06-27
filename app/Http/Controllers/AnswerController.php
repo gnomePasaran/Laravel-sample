@@ -13,8 +13,10 @@ class AnswerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth',
-            ['only' => 'store', 'update', 'destroy', 'toggle_best']);
+        $this->middleware('auth', [
+            'only' => 'store', 'update', 'destroy',
+            'toggle_best', 'voteUp', 'voteDown', 'voteCancel'
+        ]);
     }
 
     public function store(AnswerRequest $request, $postId)
@@ -30,14 +32,16 @@ class AnswerController extends Controller
 
     public function update(AnswerRequest $request, $postId, $id)
     {
-        $setAnswer = $request->only('content');
+      // dd($request);
+      dd($request->file('file')->getClientOriginalName());
+        $setAnswer = $request->only('content', 'file');
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('update', $answer)) {
             abort(403, 'Unauthorized action.');
         }
 
-        $answer->update($setAnswer);
+        $answer->updateAnswer($setAnswer);
 
         return redirect()->route('post.show', ['id' => $postId]);
     }

@@ -9,6 +9,7 @@
     </div>
   @endif
 
-  {{ Form::textArea('content')}}
+  {{ Form::textarea('content', null, ['rows' => 2]) }}
+  {{ Form::file('file') }}
   {{ Form::submit($method == 'PUT' ? 'Update' : 'Create') }}
 {{ Form::close() }}
