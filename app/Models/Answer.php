@@ -23,6 +23,11 @@ class Answer extends Model
         });
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
     public function post()
     {
         return $this->belongsTo(Post::class);

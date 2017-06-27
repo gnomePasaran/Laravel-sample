@@ -36,6 +36,11 @@ class Post extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
