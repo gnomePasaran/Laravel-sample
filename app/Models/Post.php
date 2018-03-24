@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use App\Models\Answer;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {

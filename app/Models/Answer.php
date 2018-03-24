@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Mail\PostNotified;
+use App\Mail\PostNotifier;
 use App\Models\Attachment;
 use App\Models\Post;
 use App\Models\Subscription;
@@ -20,7 +20,7 @@ class Answer extends Model
     {
         static::created(function($model) {
             foreach ($model->post->subscribers() as $subscriber) {
-                Mail::to($subscriber)->send(new PostNotified($model->post));
+                Mail::to($subscriber)->send(new PostNotifier($model->post));
             }
         });
     }
@@ -45,9 +45,9 @@ class Answer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function toggle_best()
+    public function toggleBest()
     {
-        $this->is_best = !$this->is_best;
+        $this->is_best = ! $this->is_best;
         if ($this->is_best) {
             Answer::where('post_id', '=', $this->post_id)->where('is_best', '=', true)->update(['is_best' => false]);
         }
@@ -57,20 +57,6 @@ class Answer extends Model
     public function getScore()
     {
         return $this->votes->sum('score');
-    }
-
-    public function updateAnswer($params) {
-      if (isset($params['file'])) {
-          $fileName = str_random(15).'.jpg';
-          Storage::disk('local')->get($params['file']);
-              // ->put(
-              //     'answers/'.$this->user_id.'/'.$fileName,
-              //     file_get_contents($params['file'])
-              // );
-
-          $this->attachments()->save(new Attachment(['file' => $fileName]));
-      }
-      $this->save($params);
     }
 
     public function voteUp(User $user)
