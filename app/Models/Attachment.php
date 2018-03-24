@@ -12,4 +12,9 @@ class Attachment extends Model
     {
         return $this->morphTo();
     }
+
+    public function getUrl()
+    {
+        return $this->file.'/'.$this->name;
+    }
 }

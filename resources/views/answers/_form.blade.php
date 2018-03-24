@@ -19,7 +19,7 @@
 
     @if($answer->attachments()->count())
         @foreach($answer->attachments as $attach)
-            <img src="{{ asset($attach->file.'/'.$attach->name) }}">
+            <img src="{{ asset($attach->getUrl()) }}">
         @endforeach
     @endif
 

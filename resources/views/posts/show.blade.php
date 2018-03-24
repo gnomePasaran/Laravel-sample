@@ -33,7 +33,7 @@
             <p>{{ $post->content }}</p>
             @if($post->attachments()->count())
                 @foreach($post->attachments as $attach)
-                    <img src="{{ asset($attach->file.'/'.$attach->name) }}">
+                    <img src="{{ asset($attach->getUrl()) }}">
                 @endforeach
             @endif
         </article>
