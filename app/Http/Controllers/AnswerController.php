@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\FileUploader;
+use App\Http\Requests\AnswerRequest;
+use App\Models\Answer;
+use App\Models\Post;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Answer;
-use App\Models\Post;
-use App\Http\Requests\AnswerRequest;
 
 class AnswerController extends Controller
 {
@@ -21,20 +22,25 @@ class AnswerController extends Controller
 
     public function store(AnswerRequest $request, $postId)
     {
-        $setAnswer = $request->only('content');
+        $setAnswer = $request->only(['content']);
         $setAnswer['user_id'] = Auth::user()->id;
 
         $post = Post::findOrFail($postId);
-        $post->answers()->create($setAnswer);
+        $answer = $post->answers()->create($setAnswer);
 
-        return redirect()->route('post.show', ['id' => $post->id]);
+        if ($request->file('file')) {
+            $attach = FileUploader::storeFromHttp($request->file('file'));
+            $answer->attachments()->create($attach);
+        }
+
+        return redirect()->route('post.show', [
+          'id' => $post->id
+        ]);
     }
 
     public function update(AnswerRequest $request, $postId, $id)
     {
-      // dd($request);
-      dd($request->file('file')->getClientOriginalName());
-        $setAnswer = $request->only('content', 'file');
+        $setAnswer = $request->only('content');
         $answer = Answer::findOrFail($id);
 
         if (Gate::denies('update', $answer)) {
@@ -42,6 +48,10 @@ class AnswerController extends Controller
         }
 
         $answer->updateAnswer($setAnswer);
+        if ($request->file('file')) {
+            $attach = FileUploader::storeFromHttp($request->file('file'));
+            $answer->attachments()->create($attach);
+        }
 
         return redirect()->route('post.show', ['id' => $postId]);
     }

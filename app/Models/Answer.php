@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Mail\PostNotified;
 use App\Models\Attachment;
 use App\Models\Post;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
-use App\Mail\PostNotified;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,15 +18,6 @@ class Answer extends Model
 
     protected static function boot()
     {
-        static::saving(function($model) {
-            // dd($model);
-          // if ($model->attachments) {
-          //     foreach ($model->attachments() as $attachment) {
-          //
-          //     }
-          // }
-        });
-
         static::created(function($model) {
             foreach ($model->post->subscribers() as $subscriber) {
                 Mail::to($subscriber)->send(new PostNotified($model->post));
