@@ -179,6 +179,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
 
+        // App\Services\FileUploader::class,
     ],
 
     /*
@@ -230,6 +231,8 @@ return [
 
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+
+        'FileUploader' => App\Facades\FileFacade::class,
     ],
 
 ];
