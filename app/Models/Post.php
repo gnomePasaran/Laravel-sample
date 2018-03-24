@@ -19,14 +19,14 @@ class Post extends Model
             $model->slug = Post::seoUrl($model->title);
             $model->excerpt = substr($model->content, 0, 150);
             if ($model->published == true) {
-              $model->published_at = Carbon::now()->toDateTimeString();
-              $model->published = true;
+                $model->published_at = Carbon::now()->toDateTimeString();
+                $model->published = true;
             } else {
-              $model->published = false;
+                $model->published = false;
             }
         });
 
-        static::saved(function($model) {
+        static::created(function($model) {
             $model->subscriptions()->create(['user_id' => $model->user_id]);
         });
     }
@@ -34,6 +34,11 @@ class Post extends Model
     public function answers()
     {
         return $this->hasMany(Answer::class);
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     public function subscriptions()

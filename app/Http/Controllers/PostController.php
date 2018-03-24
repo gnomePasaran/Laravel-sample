@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Gate;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Facades\FileUploader;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\Vote;
+use Gate;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -23,21 +24,29 @@ class PostController extends Controller
     public function index(Post $postModel)
     {
         $posts = $postModel->getPublishedPosts();
+
         return view('home', ['posts' => $posts]);
     }
 
     public function show($id)
     {
         $post = Post::findOrFail($id);
-        $post->with('answers')->get();
+        $post
+            ->with('answers', 'answers.attachments')
+            ->get();
 
-        return view('posts.show', ['post' => $post]);
+        return view('posts.show', [
+          'post' => $post
+        ]);
     }
 
     public function create()
     {
         $post = new Post;
-        return view('posts.create', ['post' => $post]);
+
+        return view('posts.create', [
+          'post' => $post
+        ]);
     }
 
     public function store(PostRequest $request)
@@ -45,7 +54,12 @@ class PostController extends Controller
         $setPost = $request->only('title', 'content', 'published');
         $setPost['user_id'] = Auth::user()->id;
 
-        Post::create($setPost); // returns array
+        $post = Post::create($setPost); // returns array
+        if ($request->file('file')) {
+            $attach = FileUploader::storeFromHttp($request->file('file'));
+            $post->attachments()->create($attach);
+        }
+
         return redirect()->route('posts');
     }
 
@@ -54,7 +68,7 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         if (Gate::denies('edit', $post)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
         return view('posts.edit', ['post' => $post]);
@@ -66,13 +80,19 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
 
         if (Gate::denies('update', $post)) {
-          abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.');
         }
 
-        if ($post->update($setPost)) // returns true/false
-          return redirect()->route('posts');
-        else
-          return view('posts.create', ['post' => $post]);
+        if ($post->update($setPost)) { // returns true/false
+            if ($request->file('file')) {
+                $attach = FileUploader::storeFromHttp($request->file('file'));
+                $post->attachments()->create($attach);
+            }
+
+            return redirect()->route('posts');
+        }
+
+        return view('posts.create', ['post' => $post]);
     }
 
     public function destroy($id)

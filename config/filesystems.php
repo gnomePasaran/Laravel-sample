@@ -63,6 +63,12 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'ftp' => [
+            'driver'   => 'ftp',
+            'host'     => 'localhost:8000',
+            'username' => 'Laravel',
+            'password' => '',
+        ],
     ],
 
 ];

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Mail\PostNotified;
+use App\Models\Attachment;
 use App\Models\Post;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
-use App\Mail\PostNotified;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class Answer extends Model
 {
@@ -21,6 +23,11 @@ class Answer extends Model
                 Mail::to($subscriber)->send(new PostNotified($model->post));
             }
         });
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     public function post()
@@ -50,6 +57,20 @@ class Answer extends Model
     public function getScore()
     {
         return $this->votes->sum('score');
+    }
+
+    public function updateAnswer($params) {
+      if (isset($params['file'])) {
+          $fileName = str_random(15).'.jpg';
+          Storage::disk('local')->get($params['file']);
+              // ->put(
+              //     'answers/'.$this->user_id.'/'.$fileName,
+              //     file_get_contents($params['file'])
+              // );
+
+          $this->attachments()->save(new Attachment(['file' => $fileName]));
+      }
+      $this->save($params);
     }
 
     public function voteUp(User $user)

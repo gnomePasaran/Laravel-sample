@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PostRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|unique:posts|min:5|max:50',
+            'title' => 'required|unique:posts,id,'.$this->post.'|min:5|max:50',
             'content' => 'required'
         ];
     }
