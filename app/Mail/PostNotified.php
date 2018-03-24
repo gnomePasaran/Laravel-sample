@@ -19,7 +19,7 @@ class PostNotified extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Post $post)
     {
         $this->post = $post;
     }
@@ -31,8 +31,14 @@ class PostNotified extends Mailable
      */
      public function build()
      {
-         return $this->from('laravel@laravel.com')
-                     ->view('emails.posts.notified')
-                     ->text('emails.posts.notified');
+
+          return $this
+              ->from('laravel@laravel.com')
+              ->view('emails.posts.notified', [
+                'post' => $this->post,
+              ])
+              ->text('emails.posts.notified', [
+                'post' => $this->post,
+              ]);
      }
 }
