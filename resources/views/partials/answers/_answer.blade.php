@@ -17,7 +17,11 @@
         </div>
 
         <div class="col-md-10">
-            <small>Answered: {{ $answer->user->name }} | {{ $answer->user->email }}</small>
+            <small>
+                Answered:
+                @include('partials.photo._photo', ['user' => $post->user])
+                {{ $answer->user->name }} | {{ $answer->user->email }}
+            </small>
             <small>Published: {{ $post->published_at }}</small>
             <p>{{ $answer->content }}</p>
 
