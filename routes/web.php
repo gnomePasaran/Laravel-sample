@@ -55,3 +55,8 @@ Route::post('answer/{id}/vote_cancel', [
   'as' => 'answer.vote_cancel',
   'uses' => 'AnswerController@voteCancel'
 ]);
+
+//
+// Profile
+Route::get('profile/me', 'ProfileController@me')->name('profile');
+Route::put('profile/me/update', 'ProfileController@update')->name('profile.update');
