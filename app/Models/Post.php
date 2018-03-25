@@ -18,7 +18,7 @@ class Post extends Model
         static::saving(function($model) {
             $model->slug = Post::seoUrl($model->title);
             $model->excerpt = substr($model->content, 0, 150);
-            if ($model->published == true) {
+            if (true == $model->published) {
                 $model->published_at = Carbon::now()->toDateTimeString();
                 $model->published = true;
             } else {
@@ -58,7 +58,11 @@ class Post extends Model
 
     public function getPublishedPosts()
     {
-        return $this->latest('published_at')->published()->get();
+        return $this
+            ->latest('published_at')
+            ->published()
+            ->with('attachments', 'answers', 'answers.attachments')
+            ->get();
     }
 
     public function scopePublished($query)
