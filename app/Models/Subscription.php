@@ -9,7 +9,7 @@ use App\Models\User;
 
 class Subscription extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['post_id', 'user_id'];
 
     public function post()
     {
