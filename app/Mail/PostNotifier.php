@@ -29,16 +29,15 @@ class PostNotifier extends Mailable
      *
      * @return $this
      */
-     public function build()
-     {
-
-          return $this
-              ->from('laravel@laravel.com')
-              ->view('emails.posts.notified', [
+    public function build()
+    {
+        return $this
+            ->from('laravel@laravel.com')
+            ->view('emails.posts.notified', [
                 'post' => $this->post,
-              ])
-              ->text('emails.posts.notified', [
+            ])
+            ->text('emails.posts.notified', [
                 'post' => $this->post,
-              ]);
-     }
+            ]);
+    }
 }
