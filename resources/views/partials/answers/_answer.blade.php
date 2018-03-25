@@ -12,7 +12,7 @@
             {{ $answer->getScore() }}
 
             @can('notAthor', $answer)
-                @include('votes._votes', ['entity' => $answer, 'route' => 'answer'])
+                @include('partials.votes._votes', ['entity' => $answer, 'route' => 'answer'])
             @endcan
         </div>
 
@@ -21,11 +21,11 @@
             <small>Published: {{ $post->published_at }}</small>
             <p>{{ $answer->content }}</p>
 
-            @include('attachments.attachments', ['entity' => $answer])
+            @include('partials.attachments._attachments', ['entity' => $answer])
 
             <div>
                 @can('edit', $answer)
-                    @include('answers._form', [
+                    @include('partials.answers._form', [
                         'answer' => $answer,
                         'route' => ['post.answer.update', $post->id, $answer->id],
                         'method' => 'PUT'

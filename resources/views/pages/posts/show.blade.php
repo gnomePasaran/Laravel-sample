@@ -30,23 +30,23 @@
                 {{ $post->getScore() }}
 
                 @can('notAthor', $post)
-                    @include('votes._votes', ['entity' => $post, 'route' => 'post'])
+                    @include('partials.votes._votes', ['entity' => $post, 'route' => 'post'])
                 @endcan
             </div>
             <div class="col-md-11">
                 <p>{{ $post->content }}</p>
-                @include('attachments.attachments', ['entity' => $post])
+                @include('partials.attachments._attachments', ['entity' => $post])
             </div>
         </div>
         <ul>
             @foreach ($post->answers as $answer)
-                @include('answers.answer', ['answer' => $answer])
+                @include('partials.answers._answer', ['answer' => $answer])
             @endforeach
         </ul>
         <div>
             @if(Auth::check())
                 <h2>Create answer</h2>
-                @include('answers._form', [
+                @include('partials.answers._form', [
                     'answer' => new App\Models\Answer(),
                     'route' => ['post.answer.store', $post->id],
                     'method' => 'POST'

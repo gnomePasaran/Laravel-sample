@@ -25,7 +25,7 @@ class PostController extends Controller
     {
         $posts = $postModel->getPublishedPosts();
 
-        return view('home', ['posts' => $posts]);
+        return view('pages.home', ['posts' => $posts]);
     }
 
     public function show($id)
@@ -35,7 +35,7 @@ class PostController extends Controller
             ->with('answers', 'answers.attachments')
             ->get();
 
-        return view('posts.show', [
+        return view('pages.posts.show', [
           'post' => $post
         ]);
     }
@@ -44,7 +44,7 @@ class PostController extends Controller
     {
         $post = new Post;
 
-        return view('posts.create', [
+        return view('pages.posts.create', [
           'post' => $post
         ]);
     }
@@ -71,7 +71,7 @@ class PostController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('posts.edit', ['post' => $post]);
+        return view('pages.posts.edit', ['post' => $post]);
     }
 
     public function update(PostRequest $request, $id)
@@ -92,7 +92,7 @@ class PostController extends Controller
             return redirect()->route('posts');
         }
 
-        return view('posts.create', ['post' => $post]);
+        return view('pages.posts.create', ['post' => $post]);
     }
 
     public function destroy($id)
