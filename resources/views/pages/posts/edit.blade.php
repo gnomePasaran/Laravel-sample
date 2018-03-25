@@ -1,1 +1,1 @@
-@include('posts._form')
+@include('pages.posts._form')
