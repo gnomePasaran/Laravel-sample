@@ -36,25 +36,18 @@ class PostController extends Controller
         return view('pages.home', ['posts' => $posts]);
     }
 
-    public function show($id)
+    public function show($id, Post $postModel)
     {
-        $post = Post::findOrFail($id);
-        $post
-            ->with('answers', 'answers.attachments')
-            ->get();
+        $post = $postModel->getPost($id);
 
-        return view('pages.posts.show', [
-          'post' => $post
-        ]);
+        return view('pages.posts.show', ['post' => $post]);
     }
 
     public function create()
     {
         $post = new Post;
 
-        return view('pages.posts.create', [
-          'post' => $post
-        ]);
+        return view('pages.posts.create', ['post' => $post]);
     }
 
     public function store(PostRequest $request)
@@ -79,7 +72,9 @@ class PostController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        return view('pages.posts.edit', ['post' => $post]);
+        return view('pages.posts.edit', [
+            'post' => $post
+        ]);
     }
 
     public function update(PostRequest $request, $id)
@@ -112,6 +107,7 @@ class PostController extends Controller
         }
 
         $post->delete();
+
         return redirect()->route('posts');
     }
 
@@ -120,7 +116,9 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         Auth::user()->subscribe($post);
 
-        return redirect()->route('post.show', ['id' => $id]);
+        return redirect()->route('post.show', [
+            'id' => $id
+        ]);
     }
 
     public function voteUp($id)
@@ -128,7 +126,9 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->voteUp(Auth::user());
 
-        return redirect()->route('post.show', ['id' => $id]);
+        return redirect()->route('post.show', [
+            'id' => $id
+        ]);
     }
 
     public function voteDown($id)
@@ -136,15 +136,18 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->voteDown(Auth::user());
 
-        return redirect()->route('post.show', ['id' => $id]);
+        return redirect()->route('post.show', [
+            'id' => $id
+        ]);
     }
 
     public function voteCancel($id)
     {
-
         $post = Post::findOrFail($id);
         $post->voteCancel(Auth::user());
 
-        return redirect()->route('post.show', ['id' => $id]);
+        return redirect()->route('post.show', [
+            'id' => $id
+        ]);
     }
 }

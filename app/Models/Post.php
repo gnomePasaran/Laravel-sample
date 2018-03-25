@@ -61,14 +61,36 @@ class Post extends Model
         return $this
             ->latest('published_at')
             ->published()
-            ->with('attachments', 'answers', 'answers.attachments')
             ->get();
     }
 
     public function scopePublished($query)
     {
-        $query->where('published_at', '<=', Carbon::now())
-              ->where('published', '=', true);
+        $query
+            ->where('published_at', '<=', Carbon::now())
+            ->where('published', '=', true)
+            ->with('attachments', 'answers', 'answers.attachments');
+    }
+
+    public function getPost($id)
+    {
+        return $this
+            ->where('id', '=', $id)
+            ->fullPostRelatives()
+            ->first();
+    }
+
+    public function scopeFullPostRelatives($query)
+    {
+        $query
+            ->with(
+                'user',
+                'user.photo',
+                'answers',
+                'answers.attachments',
+                'answers.user',
+                'answers.user.photo'
+            );
     }
 
     public function getScore()
@@ -99,7 +121,9 @@ class Post extends Model
 
     public function subscribers()
     {
-        return User::whereIn('id', $this->subscriptions()->pluck('user_id'))->get();
+        return User::query()
+            ->whereIn('id', $this->subscriptions()->pluck('user_id'))
+            ->get();
     }
 
     private static function seoUrl($string)
