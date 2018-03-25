@@ -16,7 +16,7 @@ class AnswerController extends Controller
     {
         $this->middleware('auth', [
             'only' => 'store', 'update', 'destroy',
-            'toggle_best', 'voteUp', 'voteDown', 'voteCancel'
+            'toggleBest', 'voteUp', 'voteDown', 'voteCancel'
         ]);
     }
 
@@ -47,7 +47,7 @@ class AnswerController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $answer->updateAnswer($setAnswer);
+        $answer->update($setAnswer);
         if ($request->file('file')) {
             $attach = FileUploader::storeFromHttp($request->file('file'));
             $answer->attachments()->create($attach);
@@ -77,7 +77,7 @@ class AnswerController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $answer->toggle_best();
+        $answer->toggleBest();
 
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
@@ -100,7 +100,6 @@ class AnswerController extends Controller
 
     public function voteCancel($id)
     {
-
         $answer = Answer::findOrFail($id);
         $answer->voteCancel(Auth::user());
 

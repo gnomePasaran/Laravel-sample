@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use App\Models\Answer;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
@@ -18,7 +18,7 @@ class Post extends Model
         static::saving(function($model) {
             $model->slug = Post::seoUrl($model->title);
             $model->excerpt = substr($model->content, 0, 150);
-            if ($model->published == true) {
+            if (true == $model->published) {
                 $model->published_at = Carbon::now()->toDateTimeString();
                 $model->published = true;
             } else {
@@ -58,7 +58,11 @@ class Post extends Model
 
     public function getPublishedPosts()
     {
-        return $this->latest('published_at')->published()->get();
+        return $this
+            ->latest('published_at')
+            ->published()
+            ->with('attachments', 'answers', 'answers.attachments')
+            ->get();
     }
 
     public function scopePublished($query)
@@ -88,8 +92,9 @@ class Post extends Model
 
     public function voteCancel(User $user)
     {
-        if ($vote = $this->votes()->where(['user_id' => $user->id])->first())
+        if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
             $vote->delete();
+        }
     }
 
     public function subscribers()

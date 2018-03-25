@@ -11,7 +11,7 @@ class AppPolicy
     public function before($user)
     {
         if ($user->admin) {
-          return true;
+            return true;
         }
     }
 }

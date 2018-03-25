@@ -17,12 +17,6 @@
 
     {{ Form::textarea('content', null, ['rows' => 2]) }}
 
-    @if($answer->attachments()->count())
-        @foreach($answer->attachments as $attach)
-            <img src="{{ asset($attach->getUrl()) }}">
-        @endforeach
-    @endif
-
     {{ Form::file('file') }}
     {{ Form::submit($method == 'PUT' ? 'Update' : 'Create') }}
 {{ Form::close() }}
