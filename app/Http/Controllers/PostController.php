@@ -16,8 +16,16 @@ class PostController extends Controller
     {
         // only Authenticated user  app/Http/Kernel.php
         $this->middleware('auth', [
-            'only' => 'create', 'store', 'update', 'destroy',
-            'subscribe', 'voteUp', 'voteDown', 'voteCancel'
+            'only' => [
+                'create',
+                'store',
+                'update',
+                'destroy',
+                'subscribe',
+                'voteUp',
+                'voteDown',
+                'voteCancel',
+            ]
         ]);
     }
 
