@@ -47,7 +47,7 @@ class AnswerController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $answer->updateAnswer($setAnswer);
+        $answer->update($setAnswer);
         if ($request->file('file')) {
             $attach = FileUploader::storeFromHttp($request->file('file'));
             $answer->attachments()->create($attach);
