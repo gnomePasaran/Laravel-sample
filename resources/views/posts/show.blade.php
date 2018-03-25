@@ -16,27 +16,28 @@
     </div>
 
     <div class="panel-body">
-        <article class="">
-            <h2>{{ $post->getScore() }}&nbsp;&nbsp;&nbsp;<b>{{ $post->title }}</b>
+        <h1>
+            <b>{{ $post->title }}</b>
+            @can('edit', $post)
+                ({{ link_to_route('post.edit', 'Edit post', $post->id) }})
+            @endcan
+        </h1>
+        <small>Athor: {{ $post->user->name }} | {{ $post->user->email }}</small>
+        <small>Published: {{ $post->published_at }}</small>
 
-                @can('edit', $post)
-                    ({{ link_to_route('post.edit', 'Edit post', $post->id) }})
-                @endcan
+        <div class="row">
+            <div class="col-md-1">
+                {{ $post->getScore() }}
 
                 @can('notAthor', $post)
                     @include('votes._votes', ['entity' => $post, 'route' => 'post'])
                 @endcan
-
-            </h2>
-            <p>Athor: {{ $post->user->name }} | {{ $post->user->email }}</p>
-            <p>Published: {{ $post->published_at }}</p>
-            <p>{{ $post->content }}</p>
-            @if($post->attachments()->count())
-                @foreach($post->attachments as $attach)
-                    <img src="{{ asset($attach->getUrl()) }}">
-                @endforeach
-            @endif
-        </article>
+            </div>
+            <div class="col-md-11">
+                <p>{{ $post->content }}</p>
+                @include('attachments.attachments', ['entity' => $post])
+            </div>
+        </div>
         <ul>
             @foreach ($post->answers as $answer)
                 @include('answers.answer', ['answer' => $answer])
@@ -46,9 +47,9 @@
             @if(Auth::check())
                 <h2>Create answer</h2>
                 @include('answers._form', [
-                  'answer' => new App\Models\Answer(),
-                  'route' => ['post.answer.store', $post->id],
-                  'method' => 'POST'
+                    'answer' => new App\Models\Answer(),
+                    'route' => ['post.answer.store', $post->id],
+                    'method' => 'POST'
                 ])
             @endif
         </div>
