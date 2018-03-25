@@ -92,8 +92,9 @@ class Post extends Model
 
     public function voteCancel(User $user)
     {
-        if ($vote = $this->votes()->where(['user_id' => $user->id])->first())
+        if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
             $vote->delete();
+        }
     }
 
     public function subscribers()
