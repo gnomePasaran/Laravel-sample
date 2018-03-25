@@ -100,7 +100,6 @@ class AnswerController extends Controller
 
     public function voteCancel($id)
     {
-
         $answer = Answer::findOrFail($id);
         $answer->voteCancel(Auth::user());
 

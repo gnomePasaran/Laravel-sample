@@ -18,7 +18,7 @@ class CreateAnswerTable extends Migration
           $table->integer('post_id')->unsigned();
           $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
           $table->index('post_id');
-          $table->string('content');
+          $table->text('content');
           $table->timestamps();
         });
     }
