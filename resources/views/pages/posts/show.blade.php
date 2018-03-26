@@ -22,7 +22,11 @@
                 ({{ link_to_route('post.edit', 'Edit post', $post->id) }})
             @endcan
         </h1>
-        <small>Athor: {{ $post->user->name }} | {{ $post->user->email }}</small>
+        <small>
+            Athor:
+            @include('partials.photo._photo', ['user' => $post->user])
+            {{ $post->user->name }} | {{ $post->user->email }}
+        </small>
         <small>Published: {{ $post->published_at }}</small>
 
         <div class="row">

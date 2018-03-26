@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Answer;
+use App\Models\Attachment;
 use App\Models\Post;
 use App\Models\Subscription;
 use App\Models\Vote;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -36,6 +37,11 @@ class User extends Authenticatable
         return $this->hasMany(Answer::class);
     }
 
+    public function photo()
+    {
+        return $this->morphOne(Attachment::class, 'attachable');
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
@@ -53,7 +59,7 @@ class User extends Authenticatable
 
     public function isSubscribed(Post $post)
     {
-        return !!$this->subscriptions()->where(['post_id' => $post->id])->first();
+        return !! $this->subscriptions()->where(['post_id' => $post->id])->first();
     }
 
     public function subscribe(Post $post)

@@ -15,8 +15,15 @@ class AnswerController extends Controller
     public function __construct()
     {
         $this->middleware('auth', [
-            'only' => 'store', 'update', 'destroy',
-            'toggleBest', 'voteUp', 'voteDown', 'voteCancel'
+            'only' => [
+                'store',
+                'update',
+                'destroy',
+                'toggleBest',
+                'voteUp',
+                'voteDown',
+                'voteCancel',
+            ]
         ]);
     }
 
