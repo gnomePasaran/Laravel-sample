@@ -31,6 +31,9 @@
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
+                    <a class="navbar-brand" href="{{ route('about-us') }}">
+                        About us
+                    </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
