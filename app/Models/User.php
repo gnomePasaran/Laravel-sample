@@ -70,4 +70,9 @@ class User extends Authenticatable
             $this->subscriptions()->create(['post_id' => $post->id]);
         }
     }
+
+    public function getScore()
+    {
+        return $this->votes->sum('score');
+    }
 }
