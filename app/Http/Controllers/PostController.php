@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    const POSTS_PER_PAGE = 3;
+
     public function __construct()
     {
         // only Authenticated user  app/Http/Kernel.php
@@ -31,7 +33,7 @@ class PostController extends Controller
 
     public function index(Post $postModel)
     {
-        $posts = $postModel->getPublishedPosts();
+        $posts = $postModel->getPublishedPosts()->paginate(self::POSTS_PER_PAGE);
 
         return view('pages.home', ['posts' => $posts]);
     }

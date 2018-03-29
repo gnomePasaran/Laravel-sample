@@ -60,3 +60,7 @@ Route::post('answer/{id}/vote_cancel', [
 // Profile
 Route::get('profile/me', 'ProfileController@me')->name('profile');
 Route::put('profile/me/update', 'ProfileController@update')->name('profile.update');
+
+//
+//Static
+Route::get('about-us', 'StaticController@aboutUs')->name('about-us');

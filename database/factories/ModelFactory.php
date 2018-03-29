@@ -31,3 +31,9 @@ $factory->define(App\Models\Post::class, function (Faker\Generator $faker) {
         'published_at' => Carbon\Carbon::now()
     ];
 });
+
+$factory->define(App\Models\Answer::class, function (Faker\Generator $faker) {
+    return [
+        'content' => $faker->name,
+    ];
+});

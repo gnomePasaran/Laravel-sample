@@ -3,6 +3,7 @@
 @section('content')
     <div class="panel-heading">
         <h1>User's Profile</h1>
+        User's score {{ $user->getScore() }}
     </div>
 
     <div class="panel-body">
