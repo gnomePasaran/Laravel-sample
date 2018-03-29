@@ -60,8 +60,7 @@ class Post extends Model
     {
         return $this
             ->latest('published_at')
-            ->published()
-            ->get();
+            ->published();
     }
 
     public function scopePublished($query)
