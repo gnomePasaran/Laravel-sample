@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Answer;
+use App\Models\Comment;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
@@ -39,6 +40,11 @@ class Post extends Model
     public function attachments()
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function subscriptions()
@@ -83,12 +89,15 @@ class Post extends Model
     {
         $query
             ->with(
+                'attachments',
                 'user',
                 'user.photo',
                 'answers',
                 'answers.attachments',
                 'answers.user',
-                'answers.user.photo'
+                'answers.user.photo',
+                'answers.comments',
+                'comments'
             );
     }
 

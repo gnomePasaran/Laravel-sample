@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Mail\PostNotifier;
 use App\Models\Attachment;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Subscription;
 use App\Models\Vote;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class Answer extends Model
 {
@@ -28,6 +28,11 @@ class Answer extends Model
     public function attachments()
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable' );
     }
 
     public function post()
