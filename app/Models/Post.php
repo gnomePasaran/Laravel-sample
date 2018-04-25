@@ -4,13 +4,15 @@ namespace App\Models;
 
 use App\Models\Answer;
 use App\Models\Subscription;
-use App\Models\Vote;
-use App\Models\User;
+use App\Models\Traits\AnswerPostTrait;
+use App\Models\Traits\VotableTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    use AnswerPostTrait, VotableTrait;
+
     protected $fillable = ['title', 'content', 'published', 'user_id'];
 
     protected static function boot()
@@ -36,24 +38,9 @@ class Post extends Model
         return $this->hasMany(Answer::class);
     }
 
-    public function attachments()
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
-    }
-
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
-    }
-
-    public function votes()
-    {
-        return $this->morphMany(Vote::class, 'votable');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function getPublishedPosts()
@@ -90,32 +77,6 @@ class Post extends Model
                 'answers.user',
                 'answers.user.photo'
             );
-    }
-
-    public function getScore()
-    {
-        return $this->votes->sum('score');
-    }
-
-    public function voteUp(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = 1;
-        $vote->save();
-    }
-
-    public function voteDown(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = -1;
-        $vote->save();
-    }
-
-    public function voteCancel(User $user)
-    {
-        if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
-            $vote->delete();
-        }
     }
 
     public function subscribers()

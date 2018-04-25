@@ -28,7 +28,8 @@ $factory->define(App\Models\Post::class, function (Faker\Generator $faker) {
         'title' => $faker->name,
         'content' => $faker->name,
         'published' => true,
-        'published_at' => Carbon\Carbon::now()
+        'published_at' => Carbon\Carbon::now(),
+        'user_id' => factory(App\Models\User::class)->create()->id
     ];
 });
 
