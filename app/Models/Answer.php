@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use App\Mail\PostNotifier;
-use App\Models\Attachment;
 use App\Models\Post;
 use App\Models\Subscription;
-use App\Models\Vote;
-use App\Models\User;
+use App\Models\Traits\AnswerPostTrait;
+use App\Models\Traits\VotableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class Answer extends Model
 {
+    use AnswerPostTrait, VotableTrait;
+
     protected $fillable = ['content', 'user_id'];
 
     protected static function boot()
@@ -25,24 +26,9 @@ class Answer extends Model
         });
     }
 
-    public function attachments()
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
-    }
-
     public function post()
     {
         return $this->belongsTo(Post::class);
-    }
-
-    public function votes()
-    {
-        return $this->morphMany(Vote::class, 'votable');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function toggleBest()
@@ -52,30 +38,5 @@ class Answer extends Model
             Answer::where('post_id', '=', $this->post_id)->where('is_best', '=', true)->update(['is_best' => false]);
         }
         $this->save();
-    }
-
-    public function getScore()
-    {
-        return $this->votes->sum('score');
-    }
-
-    public function voteUp(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = 1;
-        $vote->save();
-    }
-
-    public function voteDown(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = -1;
-        $vote->save();
-    }
-
-    public function voteCancel(User $user)
-    {
-        if ($vote = $this->votes()->where(['user_id' => $user->id]))
-            $vote->delete();
     }
 }
