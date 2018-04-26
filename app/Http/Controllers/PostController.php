@@ -7,13 +7,12 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\Vote;
 use Gate;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    const POSTS_PER_PAGE = 3;
-
     public function __construct()
     {
         // only Authenticated user  app/Http/Kernel.php
@@ -31,16 +30,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function index(Post $postModel)
+    public function show($slug, Post $postModel)
     {
-        $posts = $postModel->getPublishedPosts()->paginate(self::POSTS_PER_PAGE);
-
-        return view('pages.home', ['posts' => $posts]);
-    }
-
-    public function show($id, Post $postModel)
-    {
-        $post = $postModel->getPost($id);
+        $post = $postModel->getPost($slug);
 
         return view('pages.posts.show', ['post' => $post]);
     }
@@ -66,9 +58,9 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
-    public function edit($id)
+    public function edit($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('slug', $slug)->firstOrFail();
 
         if (Gate::denies('edit', $post)) {
             abort(403, 'Unauthorized action.');

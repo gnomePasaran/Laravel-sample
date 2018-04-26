@@ -7,11 +7,12 @@ use App\Models\Subscription;
 use App\Models\Traits\AnswerPostTrait;
 use App\Models\Traits\VotableTrait;
 use Carbon\Carbon;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use AnswerPostTrait, VotableTrait;
+    use AnswerPostTrait, Sluggable, VotableTrait;
 
     protected $fillable = ['title', 'content', 'published', 'user_id'];
 
@@ -58,12 +59,12 @@ class Post extends Model
             ->with('attachments', 'answers', 'answers.attachments');
     }
 
-    public function getPost($id)
+    public function getPost($slug)
     {
         return $this
-            ->where('id', '=', $id)
+            ->where('slug', '=', $slug)
             ->fullPostRelatives()
-            ->first();
+            ->firstOrFail();
     }
 
     public function scopeFullPostRelatives($query)
@@ -84,6 +85,15 @@ class Post extends Model
         return User::query()
             ->whereIn('id', $this->subscriptions()->pluck('user_id'))
             ->get();
+    }
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 
     private static function seoUrl($string)

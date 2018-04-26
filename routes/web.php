@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/', ['as' => 'posts', 'uses' => 'PostController@index']);
+Route::get('/', ['as' => 'posts', 'uses' => 'IndexController@index']);
 
 Auth::routes();
 
@@ -15,7 +15,7 @@ Route::resource('post.answer', 'AnswerController', [
     'create'
 ]]);
 
-Route::get('post/{id}/subscribe', [
+Route::get('post/{slug}/subscribe', [
   'as' => 'post.subscribe',
   'uses' => 'PostController@subscribe'
 ]);
@@ -25,17 +25,17 @@ Route::get('answer/{id}/toggle_best', [
   'uses' => 'AnswerController@toggleBest'
 ]);
 
-Route::post('post/{id}/vote_up', [
+Route::post('post/{slug}/vote_up', [
   'as' => 'post.vote_up',
   'uses' => 'PostController@voteUp'
 ]);
 
-Route::post('post/{id}/vote_down', [
+Route::post('post/{slug}/vote_down', [
   'as' => 'post.vote_down',
   'uses' => 'PostController@voteDown'
 ]);
 
-Route::post('post/{id}/vote_cancel', [
+Route::post('post/{slug}/vote_cancel', [
   'as' => 'post.vote_cancel',
   'uses' => 'PostController@voteCancel'
 ]);
