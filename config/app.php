@@ -168,6 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Cviebrock\EloquentSluggable\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -234,6 +235,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         'FileUploader' => App\Facades\FileFacade::class,
+
+        'Image' => 'Intervention\Image\Facades\Image
     ],
 
 ];
