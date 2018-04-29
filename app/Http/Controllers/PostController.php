@@ -105,13 +105,13 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
-    public function subscribe($id)
+    public function subscribe($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('slug', $slug)->firstOrFail();
         Auth::user()->subscribe($post);
 
         return redirect()->route('post.show', [
-            'id' => $id
+            'slug' => $post->slug
         ]);
     }
 

@@ -38,7 +38,7 @@
                 @foreach($user->subscriptions as $subscription)
                     <li>
                         {{ $subscription->post->title }}
-                        {{ link_to_route('post.subscribe', 'Unsubscribe', $subscription->post->id) }}
+                        {{ link_to_route('post.subscribe', 'Unsubscribe', [ 'slug' => $subscription->post->slug]) }}
                     </li>
                 @endforeach
             </ul>
