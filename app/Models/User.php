@@ -75,4 +75,12 @@ class User extends Authenticatable
     {
         return $this->votes->sum('score');
     }
+
+    public function generateToken()
+    {
+        $this->api_token = str_random(60);
+        $this->save();
+
+        return $this->remember_token;
+    }
 }
