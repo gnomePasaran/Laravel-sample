@@ -14,6 +14,9 @@ class PostController extends Controller
 {
     const POSTS_PER_PAGE = 3;
 
+    /**
+     * PostController constructor.
+     */
     public function __construct()
     {
         // only Authenticated user  app/Http/Kernel.php
@@ -31,6 +34,11 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param Post $postModel
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Post $postModel)
     {
         $posts = $postModel->getPublishedPosts()->paginate(self::POSTS_PER_PAGE);
@@ -38,6 +46,12 @@ class PostController extends Controller
         return view('pages.home', ['posts' => $posts]);
     }
 
+    /**
+     * @param $id
+     * @param Post $postModel
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show($id, Post $postModel)
     {
         $post = $postModel->getPost($id);
@@ -45,6 +59,9 @@ class PostController extends Controller
         return view('pages.posts.show', ['post' => $post]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $post = new Post;
@@ -52,6 +69,11 @@ class PostController extends Controller
         return view('pages.posts.create', ['post' => $post]);
     }
 
+    /**
+     * @param PostRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(PostRequest $request)
     {
         $setPost = $request->only('title', 'content', 'published');
@@ -66,6 +88,11 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $post = Post::findOrFail($id);
@@ -79,6 +106,12 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param PostRequest $request
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function update(PostRequest $request, $id)
     {
         $setPost = $request->only('title', 'content', 'published');
@@ -100,6 +133,13 @@ class PostController extends Controller
         return view('pages.posts.create', ['post' => $post]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+     */
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
@@ -113,6 +153,11 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function subscribe($id)
     {
         $post = Post::findOrFail($id);
@@ -123,6 +168,11 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteUp($id)
     {
         $post = Post::findOrFail($id);
@@ -133,6 +183,11 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteDown($id)
     {
         $post = Post::findOrFail($id);
@@ -143,6 +198,11 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteCancel($id)
     {
         $post = Post::findOrFail($id);

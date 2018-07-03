@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    /**
+     * CommentController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth', [
@@ -23,6 +26,12 @@ class CommentController extends Controller
         ]);
     }
 
+    /**
+     * @param Post $post
+     * @param CommentRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storePost(Post $post, CommentRequest $request)
     {
         $setComment = $request->only(['content']);
@@ -34,6 +43,12 @@ class CommentController extends Controller
         ]);
     }
 
+    /**
+     * @param Answer $answer
+     * @param CommentRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeAnswer(Answer $answer, CommentRequest $request)
     {
         $setComment = $request->only(['content']);
@@ -45,6 +60,12 @@ class CommentController extends Controller
         ]);
     }
 
+    /**
+     * @param Comment $comment
+     * @param CommentRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Comment $comment, CommentRequest $request)
     {
         if (Gate::denies('edit', $comment)) {
@@ -63,6 +84,13 @@ class CommentController extends Controller
         ]);
     }
 
+    /**
+     * @param Comment $comment
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+     */
     public function destroy(Comment $comment)
     {
         if (Gate::denies('edit', $comment)) {

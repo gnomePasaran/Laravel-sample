@@ -7,11 +7,13 @@ use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
 use App\Models\Post;
 use Gate;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AnswerController extends Controller
 {
+    /**
+     * AnswerController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth', [
@@ -27,6 +29,12 @@ class AnswerController extends Controller
         ]);
     }
 
+    /**
+     * @param AnswerRequest $request
+     * @param $postId
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(AnswerRequest $request, $postId)
     {
         $setAnswer = $request->only(['content']);
@@ -45,6 +53,13 @@ class AnswerController extends Controller
         ]);
     }
 
+    /**
+     * @param AnswerRequest $request
+     * @param $postId
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(AnswerRequest $request, $postId, $id)
     {
         $setAnswer = $request->only('content');
@@ -63,6 +78,14 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $postId]);
     }
 
+    /**
+     * @param $postId
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+     */
     public function destroy($postId, $id)
     {
         $answer = Answer::findOrFail($id);
@@ -76,6 +99,11 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $postId]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function toggleBest($id)
     {
         $answer = Answer::findOrFail($id);
@@ -89,6 +117,11 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteUp($id)
     {
         $answer = Answer::findOrFail($id);
@@ -97,6 +130,11 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteDown($id)
     {
         $answer = Answer::findOrFail($id);
@@ -105,6 +143,11 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function voteCancel($id)
     {
         $answer = Answer::findOrFail($id);
