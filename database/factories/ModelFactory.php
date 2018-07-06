@@ -89,8 +89,8 @@ $factory->define(Vote::class, function () {
             return factory(Post::class)->create()->id;
         },
         'votable_type' => function () {
-            return factory(Post::class)->create()->type;
+            return Post::class;
         },
-        'score' => 1,
+        'score' => rand(-1, 1),
     ];
 });

@@ -72,6 +72,9 @@ class PostRelationsTest extends TestCase
         );
     }
 
+    /**
+     * A vote relation with post test.
+     */
     public function testVoteRelation() {
         $post = factory(Post::class)->make();
         $post->each(function (Post $p) {
