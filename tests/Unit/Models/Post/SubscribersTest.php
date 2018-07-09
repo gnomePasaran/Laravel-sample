@@ -21,7 +21,7 @@ class SubscribersTest extends TestCase
         });
 
         $this->assertEquals(
-            User::query()->whereIn('id', $post->subscriptions()->pluck('user_id'))->get(),
+            User::query()->whereIn('id', $post->subscriptions->pluck('user_id'))->get(),
             $post->subscribers()
         );
     }
@@ -44,7 +44,7 @@ class SubscribersTest extends TestCase
         });
 
         $this->assertEquals(
-            User::query()->whereIn('id', $post->subscriptions()->pluck('user_id'))->get(),
+            User::query()->whereIn('id', $post->subscriptions->pluck('user_id'))->get(),
             $post->subscribers()
         );;
     }

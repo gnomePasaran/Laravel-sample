@@ -6,7 +6,6 @@ use App\Models\Answer;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Subscription;
-use App\Models\User;
 use App\Models\Vote;
 use Tests\TestCase;
 
@@ -22,7 +21,7 @@ class PostRelationsTest extends TestCase
         $post = factory(Post::class)->make();
         $this->assertEquals(
             $post->user_id,
-            User::query()->first()->id
+            $post->user->id
         );
     }
 

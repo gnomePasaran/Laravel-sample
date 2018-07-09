@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\TestCase as BaseTestCase;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -9,7 +10,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
-    use InitialiseDatabaseTrait;
+    use DatabaseMigrations;
 
     /**
      * Prepare for Dusk test execution.
@@ -35,9 +36,9 @@ abstract class DuskTestCase extends BaseTestCase
     }
 
     //... other standard stuff in the DuskTestCase
-    public function setUpTraits()
-    {
-        $this->backupDatabase();
-        parent::setUpTraits();
-    }
+//    public function setUpTraits()
+//    {
+//        $this->backupDatabase();
+//        parent::setUpTraits();
+//    }
 }

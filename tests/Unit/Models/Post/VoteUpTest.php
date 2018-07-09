@@ -21,7 +21,7 @@ class VoteUpTest extends TestCase
 
         $post->voteUp($user);
 
-        $this->assertEquals(
+        $this->assertCount(
             1,
             $post->votes->where('user_id', $user->id)->count()
         );

@@ -183,6 +183,7 @@ class Post extends Model
      */
     public function voteUp(User $user)
     {
+        /** @var Vote $vote */
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
         $vote->score = 1;
         $vote->save();
@@ -193,6 +194,7 @@ class Post extends Model
      */
     public function voteDown(User $user)
     {
+        /** @var Vote $vote */
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
         $vote->score = -1;
         $vote->save();
@@ -200,9 +202,12 @@ class Post extends Model
 
     /**
      * @param \App\Models\User $user
+     *
+     * @throws \Exception
      */
     public function voteCancel(User $user)
     {
+        /** @var Vote $vote */
         if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
             $vote->delete();
         }
