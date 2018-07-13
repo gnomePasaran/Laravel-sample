@@ -2,10 +2,8 @@
 
 namespace Tests\Browser\Tests\Homepage;
 
-use App\Models\Post;
-use App\Models\Vote;
-use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class HomepageTest extends DuskTestCase
 {
@@ -19,19 +17,8 @@ class HomepageTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->visit('/')
-                ->assertPathIs('/')
-//                ->assertSee('Login')
-//                ->assertStatus(200)
-            ;
+                ->assertSee('Login');
         });
     }
-
-    /**
-     * @throws \Throwable
-     */
-//    public function testGuestLogin()
-//    {
-//        $login = LoginTest::login($this);
-//    }
 
 }
