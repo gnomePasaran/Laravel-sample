@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use App\Mail\PostNotifier;
-use App\Models\Attachment;
-use App\Models\Comment;
 use App\Models\Post;
-use App\Models\Subscription;
-use App\Models\Vote;
-use App\Models\User;
+use App\Models\Traits\AnswerPostTrait;
+use App\Models\Traits\VotableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 
@@ -38,7 +35,8 @@ use Illuminate\Support\Facades\Mail;
  */
 class Answer extends Model
 {
-    /** @var array  */
+    use AnswerPostTrait, VotableTrait;
+
     protected $fillable = ['content', 'user_id'];
 
     /**
@@ -54,43 +52,11 @@ class Answer extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function attachments()
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable' );
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function post()
     {
         return $this->belongsTo(Post::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function votes()
-    {
-        return $this->morphMany(Vote::class, 'votable');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**
@@ -108,42 +74,5 @@ class Answer extends Model
         }
 
         $this->save();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getScore()
-    {
-        return $this->votes->sum('score');
-    }
-
-    /**
-     * @param \App\Models\User $user
-     */
-    public function voteUp(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = 1;
-        $vote->save();
-    }
-
-    /**
-     * @param \App\Models\User $user
-     */
-    public function voteDown(User $user)
-    {
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = -1;
-        $vote->save();
-    }
-
-    /**
-     * @param \App\Models\User $user
-     */
-    public function voteCancel(User $user)
-    {
-        if ($vote = $this->votes()->where(['user_id' => $user->id]))
-            $vote->delete();
     }
 }

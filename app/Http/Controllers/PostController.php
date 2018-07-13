@@ -7,16 +7,12 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\Vote;
 use Gate;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    const POSTS_PER_PAGE = 3;
-
-    /**
-     * PostController constructor.
-     */
     public function __construct()
     {
         // only Authenticated user  app/Http/Kernel.php
@@ -34,27 +30,9 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * @param Post $postModel
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index(Post $postModel)
+    public function show($slug, Post $postModel)
     {
-        $posts = $postModel->getPublishedPosts()->paginate(self::POSTS_PER_PAGE);
-
-        return view('pages.home', ['posts' => $posts]);
-    }
-
-    /**
-     * @param $id
-     * @param Post $postModel
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function show($id, Post $postModel)
-    {
-        $post = $postModel->getPost($id);
+        $post = $postModel->getPost($slug);
 
         return view('pages.posts.show', ['post' => $post]);
     }
@@ -89,13 +67,13 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param string $slug
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(string $slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('slug', $slug)->firstOrFail();
 
         if (Gate::denies('edit', $post)) {
             abort(403, 'Unauthorized action.');
@@ -108,11 +86,11 @@ class PostController extends Controller
 
     /**
      * @param PostRequest $request
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function update(PostRequest $request, $id)
+    public function update(PostRequest $request, int $id)
     {
         $setPost = $request->only('title', 'content', 'published');
         $post = Post::findOrFail($id);
@@ -134,13 +112,13 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $post = Post::findOrFail($id);
 
@@ -154,11 +132,11 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function subscribe($id)
+    public function subscribe(int $id)
     {
         $post = Post::findOrFail($id);
         Auth::user()->subscribe($post);
@@ -169,11 +147,11 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function voteUp($id)
+    public function voteUp(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteUp(Auth::user());
@@ -184,11 +162,11 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function voteDown($id)
+    public function voteDown(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteDown(Auth::user());
@@ -199,11 +177,11 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function voteCancel($id)
+    public function voteCancel(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteCancel(Auth::user());

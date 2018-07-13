@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Answer;
-use App\Models\Comment;
-use App\Models\Subscription;
-use App\Models\Vote;
-use App\Models\User;
+use App\Models\Traits\AnswerPostTrait;
+use App\Models\Traits\VotableTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -46,6 +44,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Post extends Model
 {
+    use AnswerPostTrait, Sluggable, VotableTrait;
+
     /** @var array  */
     protected $fillable = ['title', 'content', 'published', 'user_id'];
 
@@ -78,21 +78,6 @@ class Post extends Model
         return $this->hasMany(Answer::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function attachments()
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -102,25 +87,6 @@ class Post extends Model
         return $this->hasMany(Subscription::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function votes()
-    {
-        return $this->morphMany(Vote::class, 'votable');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return Post|\Illuminate\Database\Eloquent\Builder
-     */
     public function getPublishedPosts()
     {
         return $this
@@ -140,16 +106,16 @@ class Post extends Model
     }
 
     /**
-     * @param $id
+     * @param string $slug
      *
-     * @return mixed
+     * @return Post
      */
-    public function getPost($id)
+    public function getPost(string $slug): Post
     {
         return $this
-            ->where('id', '=', $id)
+            ->where('slug', '=', $slug)
             ->fullPostRelatives()
-            ->first();
+            ->firstOrFail();
     }
 
     /**
@@ -170,48 +136,6 @@ class Post extends Model
         );
     }
 
-    /**
-     * @return mixed
-     */
-    public function getScore()
-    {
-        return $this->votes->sum('score');
-    }
-
-    /**
-     * @param \App\Models\User $user
-     */
-    public function voteUp(User $user)
-    {
-        /** @var Vote $vote */
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = 1;
-        $vote->save();
-    }
-
-    /**
-     * @param \App\Models\User $user
-     */
-    public function voteDown(User $user)
-    {
-        /** @var Vote $vote */
-        $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
-        $vote->score = -1;
-        $vote->save();
-    }
-
-    /**
-     * @param \App\Models\User $user
-     *
-     * @throws \Exception
-     */
-    public function voteCancel(User $user)
-    {
-        /** @var Vote $vote */
-        if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
-            $vote->delete();
-        }
-    }
 
     /**
      * @return Builder[]|\Illuminate\Database\Eloquent\Collection
@@ -228,6 +152,15 @@ class Post extends Model
      *
      * @return null|string|string[]
      */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
     private static function seoUrl($string)
     {
         //Lower case everything
