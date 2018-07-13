@@ -10,11 +10,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    /**
+     * ProfileController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth', ['only' => 'me', 'update']);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function me()
     {
         $user = User::query()
@@ -25,6 +31,11 @@ class ProfileController extends Controller
         return view('pages.profile.me', ['user' => $user]);
     }
 
+    /**
+     * @param ProfileRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(ProfileRequest $request)
     {
         $user = Auth::user();

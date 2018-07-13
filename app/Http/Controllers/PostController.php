@@ -37,6 +37,9 @@ class PostController extends Controller
         return view('pages.posts.show', ['post' => $post]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $post = new Post;
@@ -44,6 +47,11 @@ class PostController extends Controller
         return view('pages.posts.create', ['post' => $post]);
     }
 
+    /**
+     * @param PostRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(PostRequest $request)
     {
         $setPost = $request->only('title', 'content', 'published');
@@ -58,7 +66,12 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
-    public function edit($slug)
+    /**
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit(string $slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
@@ -71,7 +84,13 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(PostRequest $request, $id)
+    /**
+     * @param PostRequest $request
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function update(PostRequest $request, int $id)
     {
         $setPost = $request->only('title', 'content', 'published');
         $post = Post::findOrFail($id);
@@ -92,7 +111,14 @@ class PostController extends Controller
         return view('pages.posts.create', ['post' => $post]);
     }
 
-    public function destroy($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+     */
+    public function destroy(int $id)
     {
         $post = Post::findOrFail($id);
 
@@ -105,7 +131,12 @@ class PostController extends Controller
         return redirect()->route('posts');
     }
 
-    public function subscribe($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function subscribe(int $id)
     {
         $post = Post::findOrFail($id);
         Auth::user()->subscribe($post);
@@ -115,7 +146,12 @@ class PostController extends Controller
         ]);
     }
 
-    public function voteUp($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteUp(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteUp(Auth::user());
@@ -125,7 +161,12 @@ class PostController extends Controller
         ]);
     }
 
-    public function voteDown($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteDown(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteDown(Auth::user());
@@ -135,7 +176,12 @@ class PostController extends Controller
         ]);
     }
 
-    public function voteCancel($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteCancel(int $id)
     {
         $post = Post::findOrFail($id);
         $post->voteCancel(Auth::user());

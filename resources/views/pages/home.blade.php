@@ -13,10 +13,10 @@
             <article class="">
                 <h2><b>{{ link_to_route('post.show', $post->title, ['post' => $post->slug]) }}</b>
                     @can('edit', $post)
-                        ({{ link_to_route('post.edit', 'Edit post', ['post' => $post->slug]) }})
+                        ({{ link_to_route('post.edit', 'Edit post', ['post' => $post->slug], 'class="edit-post"') }})
                         <span class="btn-group">
                             {{ Form::open(['method' => 'DELETE', 'route' => ['post.destroy', $post->id]]) }}
-                                {{ Form::submit('Delete', ['class' => 'btn btn-xs btn-danger ']) }}
+                                {{ Form::submit('Delete', ['class' => 'btn btn-xs btn-danger delete-post']) }}
                             {{ Form::close() }}
                         </span>
                     @endcan

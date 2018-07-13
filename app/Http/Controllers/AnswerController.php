@@ -7,11 +7,13 @@ use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
 use App\Models\Post;
 use Gate;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AnswerController extends Controller
 {
+    /**
+     * AnswerController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth', [
@@ -27,7 +29,13 @@ class AnswerController extends Controller
         ]);
     }
 
-    public function store(AnswerRequest $request, $postId)
+    /**
+     * @param AnswerRequest $request
+     * @param int $postId
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(AnswerRequest $request, int $postId)
     {
         $setAnswer = $request->only(['content']);
         $setAnswer['user_id'] = Auth::user()->id;
@@ -45,7 +53,14 @@ class AnswerController extends Controller
         ]);
     }
 
-    public function update(AnswerRequest $request, $postId, $id)
+    /**
+     * @param AnswerRequest $request
+     * @param int $postId
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(AnswerRequest $request, int $postId, int $id)
     {
         $setAnswer = $request->only('content');
         $answer = Answer::findOrFail($id);
@@ -63,7 +78,15 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $postId]);
     }
 
-    public function destroy($postId, $id)
+    /**
+     * @param int $postId
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+     */
+    public function destroy(int $postId, int $id)
     {
         $answer = Answer::findOrFail($id);
 
@@ -76,7 +99,12 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $postId]);
     }
 
-    public function toggleBest($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function toggleBest(int $id)
     {
         $answer = Answer::findOrFail($id);
 
@@ -89,7 +117,12 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
-    public function voteUp($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteUp(int $id)
     {
         $answer = Answer::findOrFail($id);
         $answer->voteUp(Auth::user());
@@ -97,7 +130,12 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
-    public function voteDown($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteDown(int $id)
     {
         $answer = Answer::findOrFail($id);
         $answer->voteDown(Auth::user());
@@ -105,7 +143,12 @@ class AnswerController extends Controller
         return redirect()->route('post.show', ['id' => $answer->post_id]);
     }
 
-    public function voteCancel($id)
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function voteCancel(int $id)
     {
         $answer = Answer::findOrFail($id);
         $answer->voteCancel(Auth::user());

@@ -27,6 +27,18 @@
 
             @include('partials.attachments._attachments', ['entity' => $answer])
 
+            @foreach($answer->comments as $comment)
+                @include('partials.comments._comment', ['comment' => $comment])
+            @endforeach
+            @if(Auth::check())
+                <h3>Create comment</h3>
+                @include('partials.comments._form', [
+                    'comment' => new App\Models\Comment(),
+                    'route' => ['answer.comment.store', $answer],
+                    'method' => 'POST'
+                ])
+            @endif
+
             <div>
                 @can('edit', $answer)
                     @include('partials.answers._form', [

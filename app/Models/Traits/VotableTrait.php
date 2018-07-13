@@ -10,11 +10,17 @@ use App\Models\User;
  */
 trait VotableTrait
 {
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function votes()
     {
         return $this->morphMany(Vote::class, 'votable');
     }
 
+    /**
+     * @param User $user
+     */
     public function voteUp(User $user)
     {
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
@@ -22,6 +28,9 @@ trait VotableTrait
         $vote->save();
     }
 
+    /**
+     * @param User $user
+     */
     public function voteDown(User $user)
     {
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
@@ -29,15 +38,20 @@ trait VotableTrait
         $vote->save();
     }
 
+    /**
+     * @param User $user
+     */
     public function voteCancel(User $user)
     {
-        if ($vote = $this->votes()->where(['user_id' => $user->id])->first()) {
+        if ($vote = $this->votes()->where(['user_id' => $user->id]))
             $vote->delete();
-        }
     }
 
-    public function getScore()
+    /**
+     * @return int
+     */
+    public function getScore(): int
     {
-        return $this->votes->sum('score');
+        return (int) $this->votes->sum('score');
     }
 }

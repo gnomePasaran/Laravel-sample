@@ -25,6 +25,8 @@ class AddIsBestToAnswer extends Migration
      */
     public function down()
     {
-        $table->dropColumn('admin');
+        Schema::table('answers', function (Blueprint $table) {
+            $table->dropColumn('is_best');
+        });
     }
 }

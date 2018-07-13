@@ -64,3 +64,10 @@ Route::put('profile/me/update', 'ProfileController@update')->name('profile.updat
 //
 //Static
 Route::get('about-us', 'StaticController@aboutUs')->name('about-us');
+
+//
+// Comments
+Route::post('post/{post}/comment', 'CommentController@storePost')->name('post.comment.store');
+Route::post('anwser/{answer}/comment', 'CommentController@storeAnswer')->name('answer.comment.store');
+Route::put('comments/{comment}', 'CommentController@update')->name('comment.update');
+Route::delete('comments/{comment}', 'CommentController@destroy')->name('comment.destroy');

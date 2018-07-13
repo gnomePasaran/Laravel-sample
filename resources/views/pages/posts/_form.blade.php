@@ -51,6 +51,6 @@
         </div>
         {{ Form::file('file') }}
 
-        {{ Form::submit('Create post') }} &nbsp;&nbsp;&nbsp; {{ link_to_route('posts', 'Cancel') }}
+        {{ Form::submit('Save post') }} &nbsp;&nbsp;&nbsp; {{ link_to_route('posts', 'Cancel') }}
     {{ Form::close() }}
 @stop

@@ -2,46 +2,51 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Models\Post;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class GuestPostTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
     /**
      * A basic browser test example.
      *
-     * @return void
+     * @throws \Throwable
      */
-    public function testDontCreatePost()
+    public function testDoesNotCreatePost()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('http://localhost:8000/')
-                    ->assertDontSee('New post');
+            $browser
+                ->visit('/')
+                ->assertDontSee('New post');
         });
     }
 
-    public function testDontEditPostOnIndex()
+    /**
+     * @throws \Throwable
+     */
+    public function testDoesNotEditPostOnIndex()
     {
         $post = factory(Post::class)->create();
 
         $this->browse(function (Browser $browser) {
-            $browser->visit('http://localhost:8000/')
-                    ->assertDontSee('Edit post');
+            $browser
+                ->visit('/')
+                ->assertDontSee('Edit post');
         });
     }
 
-    public function testDontEditPostOnShow()
+    /**
+     * @throws \Throwable
+     */
+    public function testDoesNotEditPostOnShow()
     {
         $post = factory(Post::class)->create();
 
         $this->browse(function (Browser $browser) use ($post) {
-            $browser->visit("http://localhost:8000/post/$post->id")
-                    ->assertDontSee('Edit post');
+            $browser
+                ->visit("/post/$post->id")
+                ->assertDontSee('Edit post');
         });
     }
 }
