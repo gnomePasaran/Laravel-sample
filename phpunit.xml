@@ -17,10 +17,10 @@
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
 
-        <testsuite name="Application Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-            <exclude>./tests/Browser/</exclude>
-        </testsuite>
+        <!--<testsuite name="Application Test Suite">-->
+            <!--<directory suffix="Test.php">./tests</directory>-->
+            <!--<exclude>./tests/Browser/</exclude>-->
+        <!--</testsuite>-->
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -29,9 +29,11 @@
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="MAIL_DRIVER" value="array"/>
         <env name="DB_CONNECTION" value="sqlite_testing" />
     </php>
 </phpunit>
