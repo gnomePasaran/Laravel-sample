@@ -5,16 +5,29 @@ namespace App\Http\Controllers;
 use App\Facades\FileUploader;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Models\Vote;
+use App\Services\PostService;
 use Gate;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    public function __construct()
+    /** @var PostService  */
+    private $postService;
+
+    /**
+     * PostController constructor.
+     *
+     * @param PostService $postService
+     */
+    public function __construct(PostService $postService)
     {
+        $this->postService = $postService;
+
         // only Authenticated user  app/Http/Kernel.php
         $this->middleware('auth', [
             'only' => [
@@ -38,7 +51,7 @@ class PostController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function create()
     {
@@ -50,18 +63,13 @@ class PostController extends Controller
     /**
      * @param PostRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     *
+     * @throws \Throwable
      */
     public function store(PostRequest $request)
     {
-        $setPost = $request->only('title', 'content', 'published');
-        $setPost['user_id'] = Auth::user()->id;
-
-        $post = Post::create($setPost); // returns array
-        if ($request->file('file')) {
-            $attach = FileUploader::storeFromHttp($request->file('file'));
-            $post->attachments()->create($attach);
-        }
+        $this->postService->savePost($request, new Post());
 
         return redirect()->route('posts');
     }
@@ -69,11 +77,11 @@ class PostController extends Controller
     /**
      * @param string $slug
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(string $slug)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post = Post::query()->where('slug', $slug)->firstOrFail();
 
         if (Gate::denies('edit', $post)) {
             abort(403, 'Unauthorized action.');
@@ -86,25 +94,22 @@ class PostController extends Controller
 
     /**
      * @param PostRequest $request
-     * @param int $id
+     * @param int         $id
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return Factory|RedirectResponse|View
+     *
+     * @throws \Throwable
      */
     public function update(PostRequest $request, int $id)
     {
-        $setPost = $request->only('title', 'content', 'published');
+        /** @var Post $post */
         $post = Post::findOrFail($id);
 
         if (Gate::denies('update', $post)) {
             abort(403, 'Unauthorized action.');
         }
 
-        if ($post->update($setPost)) { // returns true/false
-            if ($request->file('file')) {
-                $attach = FileUploader::storeFromHttp($request->file('file'));
-                $post->attachments()->create($attach);
-            }
-
+        if ($this->postService->savePost($request, $post)) { // returns Post
             return redirect()->route('posts');
         }
 
@@ -114,7 +119,7 @@ class PostController extends Controller
     /**
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      *
      * @throws \Exception
      */
@@ -134,10 +139,11 @@ class PostController extends Controller
     /**
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function subscribe(int $id)
     {
+        /** @var Post $post */
         $post = Post::findOrFail($id);
         Auth::user()->subscribe($post);
 
@@ -149,10 +155,11 @@ class PostController extends Controller
     /**
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function voteUp(int $id)
     {
+        /** @var Post $post */
         $post = Post::findOrFail($id);
         $post->voteUp(Auth::user());
 
@@ -164,10 +171,11 @@ class PostController extends Controller
     /**
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function voteDown(int $id)
     {
+        /** @var Post $post */
         $post = Post::findOrFail($id);
         $post->voteDown(Auth::user());
 
@@ -179,10 +187,11 @@ class PostController extends Controller
     /**
      * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function voteCancel(int $id)
     {
+        /** @var Post $post */
         $post = Post::findOrFail($id);
         $post->voteCancel(Auth::user());
 

@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Facade;
  */
 class FileUploader extends Facade
 {
-
+    /**
+     * @return string
+     */
     protected static function getFacadeAccessor()
     {
         return FileService::class;

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * App\Models\Attachment
  *
  * @property int $id
- * @property string $name
- * @property string $file
+ * @property string $path
  * @property int $attachable_id
  * @property string $attachable_type
  * @property \Carbon\Carbon|null $created_at
@@ -26,12 +26,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Attachment extends Model
 {
-    protected $fillable = ['name', 'file'];
+    protected $fillable = ['path'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
-    public function attachable()
+    public function attachable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -39,8 +39,8 @@ class Attachment extends Model
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
-        return $this->file.'/'.$this->name;
+        return 'storage/'.$this->path;
     }
 }
