@@ -5,6 +5,7 @@ namespace App\Models\Traits;
 use App\Models\Attachment;
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations;
 
 /**
  * Trait AnswerPostTrait
@@ -12,7 +13,7 @@ use App\Models\User;
 trait AnswerPostTrait
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return Relations\MorphMany
      */
     public function attachments()
     {
@@ -20,7 +21,7 @@ trait AnswerPostTrait
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return Relations\MorphMany
      */
     public function comments()
     {
@@ -28,10 +29,28 @@ trait AnswerPostTrait
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Sync attachments with related entity.
+     *
+     * @param array $attachID
+     *
+     * @return self
+     */
+    public function syncAttachment(array $attachID): self
+    {
+        $this->attachments()->each(function (Attachment $attach) use ($attachID) {
+            if (! in_array($attach->id, $attachID)) {
+                $attach->delete();
+            }
+        });
+
+        return $this;
     }
 }

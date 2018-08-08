@@ -12,11 +12,13 @@ use Intervention\Image\Facades\Image;
  */
 class FileService
 {
+    const SIZE_ORIGINAL = 0;
     const SIZE_MIN = 200;
     const SIZE_MEDIUM = 500;
     const SIZE_MAX = 1200;
 
     const SIZES = [
+        self::SIZE_ORIGINAL,
         self::SIZE_MIN,
         self::SIZE_MEDIUM,
         self::SIZE_MAX,
@@ -25,9 +27,9 @@ class FileService
     /**
      * @param UploadedFile $file
      *
-     * @return false|string
+     * @return string
      */
-    public function storeFromHttp(UploadedFile $file)
+    public function storeFromHttp(UploadedFile $file): string
     {
         $storage = \Storage::disk('local');
         $name = str_random(15);
@@ -40,11 +42,32 @@ class FileService
                 })
                 ->stream($file->extension());
 
-            $storage->put($path.self::getFullName($name, $file->extension(), $size), $steam);
+            $storage->put($path.'/'.self::getFullName($name, $file->extension(), $size), $steam);
             $steam->close();
         }
 
-        return $storage->putFileAs($path, $file, self::getFullName($name, $file->extension()));
+        return (string) $storage->putFileAs($path, $file, self::getFullName($name, $file->extension()));
+    }
+
+    /**
+     * @param string $path
+     * @param int|null $size
+     *
+     * @return string
+     */
+    public function path(string $path, int $size = null): string
+    {
+        if (! $size || is_null($size)) {
+            return $path;
+        }
+
+        if (! in_array($size, self::SIZES)) {
+            return $path;
+        }
+
+        $extension = array_last(explode('.', $path));
+
+        return str_replace_last($extension,$size.'.'.$extension, $path);
     }
 
     /**
@@ -57,7 +80,7 @@ class FileService
         $hash = substr($name, 0, 2);
         $year = Carbon::now()->year;
 
-        return "public/images/{$year}/{$hash}/";
+        return "images/{$year}/{$hash}";
     }
 
     /**

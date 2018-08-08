@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Events\AddAttachment;
 use App\Models\Traits\AnswerPostTrait;
 use App\Models\Traits\VotableTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 /**
  * App\Models\Post
@@ -52,9 +54,11 @@ class Post extends Model
     /**
      * Boot method
      */
-    protected static function boot()
+    public static function boot()
     {
-        static::saving(function($model) {
+        parent::boot();
+
+        static::saving(function(Post $model) {
             $model->slug = Post::seoUrl($model->title);
             $model->excerpt = substr($model->content, 0, 150);
             if (true == $model->published) {
@@ -65,7 +69,7 @@ class Post extends Model
             }
         });
 
-        static::created(function($model) {
+        static::created(function(Post $model) {
             $model->subscriptions()->create(['user_id' => $model->user_id]);
         });
     }
@@ -87,6 +91,9 @@ class Post extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    /**
+     * @return Post|Builder
+     */
     public function getPublishedPosts()
     {
         return $this
@@ -161,7 +168,12 @@ class Post extends Model
         ];
     }
 
-    private static function seoUrl($string)
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    private static function seoUrl($string): string
     {
         //Lower case everything
         $string = strtolower($string);
