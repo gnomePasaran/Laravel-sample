@@ -43,6 +43,12 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @param $slug
+     * @param Post $postModel
+     *
+     * @return Factory|View
+     */
     public function show($slug, Post $postModel)
     {
         $post = $postModel->getPost($slug);
