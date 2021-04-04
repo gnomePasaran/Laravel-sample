@@ -184,6 +184,8 @@ return [
         // App\Services\FileUploader::class,
         // imge upload
         Intervention\Image\ImageServiceProvider::class,
+        // Swagger
+        RonasIT\Support\AutoDoc\AutoDocServiceProvider::class,
     ],
 
     /*
