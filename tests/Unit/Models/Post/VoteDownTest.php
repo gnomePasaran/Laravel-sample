@@ -11,7 +11,7 @@ class VoteDownTest extends TestCase
     /**
      * User votes down, and post has only one vote.
      */
-    public function testUserVotesUp()
+    public function testUserVotesDown()
     {
         /** @var Post $post */
         $post = factory(Post::class)->create();

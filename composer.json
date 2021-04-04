@@ -9,9 +9,12 @@
         "cviebrock/eloquent-sluggable": "^4.2",
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "^4.0",
+        "intervention/image": "dev-master",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4",
+        "ronasit/laravel-helpers": "^1.5",
+        "ronasit/laravel-swagger": "^1.6",
         "twbs/bootstrap": "dev-master"
     },
     "require-dev": {

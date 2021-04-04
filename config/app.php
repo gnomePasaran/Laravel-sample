@@ -182,6 +182,10 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
         // App\Services\FileUploader::class,
+        // imge upload
+        Intervention\Image\ImageServiceProvider::class,
+        // Swagger
+        RonasIT\Support\AutoDoc\AutoDocServiceProvider::class,
     ],
 
     /*
@@ -234,7 +238,9 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
-        'FileUploader' => App\Facades\FileFacade::class,
+        'FileUploader' => App\Facades\FileUploader::class,
+
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];

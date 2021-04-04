@@ -49,7 +49,10 @@
                 {{ Form::checkbox('published', '1', $post->published_at) }}
             </div>
         </div>
-        {{ Form::file('file') }}
+
+        @include('partials.attachments._edit-attachments', ['entity' => $post])
+
+        {{ Form::file('files[]') }}
 
         {{ Form::submit('Save post') }} &nbsp;&nbsp;&nbsp; {{ link_to_route('posts', 'Cancel') }}
     {{ Form::close() }}

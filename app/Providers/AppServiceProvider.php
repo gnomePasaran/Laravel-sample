@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Attachment;
+use App\Observers\AttachmentObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Dusk\DuskServiceProvider;
@@ -16,6 +18,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        Attachment::observe(AttachmentObserver::class);
     }
 
     /**

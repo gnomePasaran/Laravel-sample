@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\Vote;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * Trait VotableTrait
@@ -11,7 +12,7 @@ use App\Models\User;
 trait VotableTrait
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
     public function votes()
     {
@@ -23,6 +24,7 @@ trait VotableTrait
      */
     public function voteUp(User $user)
     {
+        /** @var Vote $vote */
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
         $vote->score = 1;
         $vote->save();
@@ -33,6 +35,7 @@ trait VotableTrait
      */
     public function voteDown(User $user)
     {
+        /** @var Vote $vote */
         $vote = $this->votes()->firstOrNew(['user_id' => $user->id]);
         $vote->score = -1;
         $vote->save();
