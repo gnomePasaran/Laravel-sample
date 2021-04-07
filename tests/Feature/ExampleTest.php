@@ -10,13 +10,13 @@ class ExampleTest extends TestCase
 {
     public function testBasicTest()
     {
-        $response = $this->get('/api/test');
+        $response = $this->get('/api/tests');
 
         $response->assertStatus(200);
     }
 
     public function testGetListNotFound() {
-        $response = $this->json('get', '/api/test', [
+        $response = $this->json('get', '/api/tests', [
             'not-found' => true
         ]);
 
@@ -24,7 +24,7 @@ class ExampleTest extends TestCase
     }
 
     public function testGetListNoAuth() {
-        $response = $this->json('get', '/api/test', [
+        $response = $this->json('get', '/api/tests', [
             'need-authorization' => true
         ]);
 
@@ -32,7 +32,7 @@ class ExampleTest extends TestCase
     }
 
     public function testGetListWrongParameters() {
-        $response = $this->json('get', '/api/test', [
+        $response = $this->json('get', '/api/tests', [
             'test-parameter' => 'test'
         ]);
 
