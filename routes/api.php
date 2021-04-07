@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Api\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/test', ['uses' => TestController::class . '@lists']);
+Route::get('/tests', ['uses' => TestController::class . '@lists']);
